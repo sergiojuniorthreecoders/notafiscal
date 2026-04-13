@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,8 +35,8 @@ import {
   XCircle,
 } from "lucide-react"
 import { useConfig } from "@/lib/config-context"
-import { fetchOCByNFe, registrarEntradaNFe, addToHistorico } from "@/lib/api-service"
-import type { NotaFiscal, OrdemCompra, NFItem, OCItem } from "@/lib/types"
+import { fetchOCByNFe, registrarEntradaNFe, addToHistorico, updateNFeStatus, updateOCItems } from "@/lib/api-service"
+import type { NotaFiscal, OrdemCompra } from "@/lib/types"
 
 interface ValidationScreenProps {
   nfe: NotaFiscal
@@ -44,26 +44,21 @@ interface ValidationScreenProps {
   onComplete: () => void
 }
 
-interface ItemComparison {
-  nfItem: NFItem
-  ocItem: OCItem | null
-  match: boolean
-  quantityMatch: boolean
-}
-
 export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenProps) {
   const { config } = useConfig()
   const [oc, setOC] = useState<OrdemCompra | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [itemsChecked, setItemsChecked] = useState<Set<string>>(new Set())
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [showRejectDialog, setShowRejectDialog] = useState(false)
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null)
-  const [comparisons, setComparisons] = useState<ItemComparison[]>([])
-  const [avaliacaoQualidade, setAvaliacaoQualidade] = useState<string>("")
-  const [avaliacaoPontualidade, setAvaliacaoPontualidade] = useState<string>("")
-  const [avaliacaoMASSO, setAvaliacaoMASSO] = useState<string>("")
+  // itemQuantities: quantidade que será recebida agora para cada item da OC (chave = ocItem.id)
+  const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({})
+  const [avaliacaoQualidade, setAvaliacaoQualidade] = useState<string>(nfe.avaliacao?.qualidade ?? "")
+  const [avaliacaoPontualidade, setAvaliacaoPontualidade] = useState<string>(nfe.avaliacao?.pontualidade ?? "")
+  const [avaliacaoMASSO, setAvaliacaoMASSO] = useState<string>(nfe.avaliacao?.masso ?? "")
+
+  const isReadOnly = nfe.status === "processada"
 
   useEffect(() => {
     loadOC()
@@ -72,21 +67,17 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
   const loadOC = async () => {
     setIsLoading(true)
     try {
-      const data = await fetchOCByNFe(nfe.id, config, true)
+      const data = await fetchOCByNFe(nfe.ordemCompraId || "", config, true)
       setOC(data)
-      
-      // Criar comparações de itens
+
       if (data) {
-        const comps: ItemComparison[] = nfe.itens.map((nfItem) => {
-          const ocItem = data.itens.find((oci) => oci.codigo === nfItem.codigo)
-          return {
-            nfItem,
-            ocItem: ocItem || null,
-            match: !!ocItem,
-            quantityMatch: ocItem ? ocItem.quantidadeEsperada === nfItem.quantidade : false,
-          }
-        })
-        setComparisons(comps)
+        // Inicializa com o restante de cada item (total - já recebido)
+        const initial: Record<string, number> = {}
+        for (const item of data.itens) {
+          const restante = Math.max(0, item.quantidadeEsperada - (item.quantidadeRecebida ?? 0))
+          initial[item.id] = restante
+        }
+        setItemQuantities(initial)
       }
     } catch (error) {
       console.error("Erro ao carregar OC:", error)
@@ -95,17 +86,10 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
     }
   }
 
-  const toggleItem = (itemId: string) => {
-    const newChecked = new Set(itemsChecked)
-    if (newChecked.has(itemId)) {
-      newChecked.delete(itemId)
-    } else {
-      newChecked.add(itemId)
-    }
-    setItemsChecked(newChecked)
+  const updateItemQty = (itemId: string, value: number, max: number) => {
+    const clamped = Math.min(Math.max(0, value), max)
+    setItemQuantities((prev) => ({ ...prev, [itemId]: clamped }))
   }
-
-  const allItemsChecked = itemsChecked.size === nfe.itens.length
 
   const handleAccept = async () => {
     setShowConfirmDialog(false)
@@ -113,10 +97,38 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
 
     try {
       const response = await registrarEntradaNFe(nfe.id, config, true)
+
+      if (response.success) {
+        await updateNFeStatus(nfe.id, {
+          avaliacao: {
+            qualidade: avaliacaoQualidade,
+            pontualidade: avaliacaoPontualidade,
+            masso: avaliacaoMASSO,
+          },
+        })
+
+        if (oc) {
+          const updatedItems = oc.itens.map((ocItem) => {
+            const qty = itemQuantities[ocItem.id] ?? 0
+            const newReceived = Math.min(
+              (ocItem.quantidadeRecebida ?? 0) + qty,
+              ocItem.quantidadeEsperada
+            )
+            return { ...ocItem, quantidadeRecebida: newReceived }
+          })
+          const allReceived = updatedItems.every(
+            (i) => (i.quantidadeRecebida ?? 0) >= i.quantidadeEsperada
+          )
+          await updateOCItems(oc.id, {
+            itens: updatedItems,
+            status: allReceived ? "fechada" : "parcial",
+          })
+        }
+      }
+
       setResult(response)
 
-      // Adicionar ao histórico
-      addToHistorico({
+      await addToHistorico({
         tipo: response.success ? "entrada" : "erro",
         notaFiscalId: nfe.id,
         notaFiscalNumero: nfe.numero,
@@ -127,25 +139,18 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
       })
 
       if (response.success) {
-        setTimeout(() => {
-          onComplete()
-        }, 2000)
+        setTimeout(() => onComplete(), 2000)
       }
     } catch {
-      setResult({
-        success: false,
-        message: "Erro inesperado ao processar entrada",
-      })
+      setResult({ success: false, message: "Erro inesperado ao processar entrada" })
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleReject = () => {
+  const handleReject = async () => {
     setShowRejectDialog(false)
-    
-    // Adicionar ao histórico
-    addToHistorico({
+    await addToHistorico({
       tipo: "erro",
       notaFiscalId: nfe.id,
       notaFiscalNumero: nfe.numero,
@@ -154,20 +159,16 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
       status: "erro",
       mensagem: "NF-e recusada pelo operador",
     })
-
     onBack()
   }
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value)
-  }
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("pt-BR")
-  }
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("pt-BR")
+
+  const avaliacaoPreenchida = !!avaliacaoQualidade && !!avaliacaoPontualidade && !!avaliacaoMASSO
 
   if (isLoading) {
     return (
@@ -180,7 +181,6 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
     )
   }
 
-  // Tela de resultado
   if (result) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-4">
@@ -198,9 +198,7 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         }`}>
           {result.success ? "Entrada Registrada!" : "Falha no Registro"}
         </h2>
-        <p className="text-center text-muted-foreground mb-6">
-          {result.message}
-        </p>
+        <p className="text-center text-muted-foreground mb-6">{result.message}</p>
         {result.success ? (
           <p className="text-sm text-muted-foreground">Retornando ao scanner...</p>
         ) : (
@@ -224,6 +222,19 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
           <p className="text-sm text-muted-foreground">Confira os itens antes de confirmar</p>
         </div>
       </div>
+
+      {/* Banner de já conciliada */}
+      {isReadOnly && (
+        <div className="flex items-center gap-3 rounded-xl bg-green-500/10 p-4 text-green-600 border border-green-500/20">
+          <CheckCircle2 className="h-6 w-6 flex-shrink-0" />
+          <div>
+            <p className="font-semibold">Nota Fiscal já conciliada</p>
+            {nfe.dataRecebimento && (
+              <p className="text-sm opacity-80">Recebida em {formatDate(nfe.dataRecebimento)}</p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Resumo da NF-e */}
       <Card>
@@ -265,91 +276,107 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
               <span className="font-medium">{formatDate(oc.dataPrevisao)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Itens Esperados</span>
-              <span className="font-medium">{oc.itens.length}</span>
+              <span className="text-muted-foreground">Status</span>
+              <span className="font-medium capitalize">{oc.status}</span>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Lista de itens para conferência */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+      {/* Itens da OC */}
+      {oc && oc.itens.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
               <Package className="h-5 w-5 text-primary" />
-              <CardTitle className="text-lg">Itens ({nfe.itens.length})</CardTitle>
+              <CardTitle className="text-lg">Itens da OC ({oc.itens.length})</CardTitle>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                if (allItemsChecked) {
-                  setItemsChecked(new Set())
-                } else {
-                  setItemsChecked(new Set(nfe.itens.map((i) => i.id)))
-                }
-              }}
-            >
-              {allItemsChecked ? "Desmarcar" : "Marcar"} Todos
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {comparisons.map(({ nfItem, ocItem, match, quantityMatch }) => (
-            <div
-              key={nfItem.id}
-              className={`flex items-start gap-3 p-3 rounded-lg border transition-colors ${
-                itemsChecked.has(nfItem.id)
-                  ? "bg-success/5 border-success/30"
-                  : "bg-muted/30 border-transparent"
-              }`}
-              onClick={() => toggleItem(nfItem.id)}
-            >
-              <Checkbox
-                checked={itemsChecked.has(nfItem.id)}
-                onCheckedChange={() => toggleItem(nfItem.id)}
-                className="mt-1"
-              />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {oc.itens.map((ocItem) => {
+              const recebido = ocItem.quantidadeRecebida ?? 0
+              const restante = Math.max(0, ocItem.quantidadeEsperada - recebido)
+              const qty = itemQuantities[ocItem.id] ?? restante
+              const totalRecebidoComEsta = recebido + qty
+              const completo = totalRecebidoComEsta >= ocItem.quantidadeEsperada
+
+              return (
+                <div key={ocItem.id} className="p-3 rounded-lg border bg-muted/20 space-y-3">
+                  {/* Descrição e código */}
                   <div>
-                    <p className="font-medium text-sm">{nfItem.descricao}</p>
-                    <p className="text-xs text-muted-foreground">{nfItem.codigo}</p>
+                    <p className="font-medium text-sm">{ocItem.descricao}</p>
+                    <p className="text-xs text-muted-foreground">{ocItem.codigo} · {ocItem.unidade}</p>
                   </div>
-                  {!match && (
-                    <Badge variant="outline" className="bg-warning/10 text-warning border-warning/30 text-xs">
-                      <AlertTriangle className="h-3 w-3 mr-1" />
-                      Divergente
+
+                  {/* Progresso */}
+                  <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div className="rounded bg-background p-2">
+                      <p className="text-muted-foreground">Total OC</p>
+                      <p className="font-bold text-sm">{ocItem.quantidadeEsperada}</p>
+                    </div>
+                    <div className="rounded bg-background p-2">
+                      <p className="text-muted-foreground">Já recebido</p>
+                      <p className="font-bold text-sm">{recebido}</p>
+                    </div>
+                    <div className="rounded bg-background p-2">
+                      <p className="text-muted-foreground">Restante</p>
+                      <p className={`font-bold text-sm ${restante === 0 ? "text-success" : "text-warning"}`}>
+                        {restante}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Campo de quantidade a receber agora */}
+                  {!isReadOnly && restante > 0 && (
+                    <div className="space-y-1">
+                      <label className="text-xs text-muted-foreground font-medium">
+                        Receber agora (máx. {restante})
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          min={0}
+                          max={restante}
+                          value={qty}
+                          onChange={(e) =>
+                            updateItemQty(ocItem.id, Number(e.target.value), restante)
+                          }
+                          className="h-10 text-center text-base font-semibold"
+                        />
+                        {completo && (
+                          <Badge className="bg-success/10 text-success border-success/30 whitespace-nowrap">
+                            <Check className="h-3 w-3 mr-1" />
+                            Completo
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Leitura (já recebido completamente ou modo read-only) */}
+                  {(isReadOnly || restante === 0) && (
+                    <Badge className="bg-success/10 text-success border-success/30">
+                      <Check className="h-3 w-3 mr-1" />
+                      {restante === 0 ? "Totalmente recebido" : "Conciliado"}
                     </Badge>
                   )}
                 </div>
-                <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span className="text-xs text-muted-foreground block">NF-e</span>
-                    <span className="font-semibold">{nfItem.quantidade} {nfItem.unidade}</span>
-                  </div>
-                  {ocItem && (
-                    <div>
-                      <span className="text-xs text-muted-foreground block">OC Esperado</span>
-                      <span className={`font-semibold ${
-                        quantityMatch ? "text-success" : "text-warning"
-                      }`}>
-                        {ocItem.quantidadeEsperada} {ocItem.unidade}
-                        {quantityMatch ? (
-                          <Check className="h-3 w-3 inline ml-1" />
-                        ) : (
-                          <AlertTriangle className="h-3 w-3 inline ml-1" />
-                        )}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+              )
+            })}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Sem OC vinculada */}
+      {!oc && (
+        <div className="flex items-center gap-3 rounded-xl bg-destructive/10 p-4 text-destructive border border-destructive/20">
+          <AlertTriangle className="h-6 w-6 flex-shrink-0" />
+          <div>
+            <p className="font-semibold">Sem Ordem de Compra vinculada</p>
+            <p className="text-sm opacity-80">Não é possível aceitar ou recusar esta NF-e sem uma OC associada.</p>
+          </div>
+        </div>
+      )}
 
       {/* Avaliação do fornecedor */}
       <Card>
@@ -376,7 +403,7 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
           ].map(({ label, value, onChange }) => (
             <div key={label} className="space-y-2">
               <label className="text-sm font-medium leading-snug block">{label}</label>
-              <Select value={value} onValueChange={onChange}>
+              <Select value={value} onValueChange={onChange} disabled={isReadOnly}>
                 <SelectTrigger className="h-11 w-full">
                   <SelectValue placeholder="Selecione..." />
                 </SelectTrigger>
@@ -394,38 +421,54 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
       {/* Botões de ação fixos */}
       <div className="fixed bottom-16 left-0 right-0 p-4 bg-gradient-to-t from-background via-background to-transparent safe-area-pb">
         <div className="mx-auto max-w-lg flex gap-3">
-          <Button
-            variant="destructive"
-            className="flex-1 h-14 text-lg font-semibold"
-            onClick={() => setShowRejectDialog(true)}
-            disabled={isSubmitting}
-          >
-            <X className="mr-2 h-5 w-5" />
-            Recusar
-          </Button>
-          <Button
-            className="flex-1 h-14 text-lg font-semibold"
-            onClick={() => setShowConfirmDialog(true)}
-            disabled={isSubmitting || !allItemsChecked || !avaliacaoQualidade || !avaliacaoPontualidade || !avaliacaoMASSO}
-          >
-            {isSubmitting ? (
-              <>
-                <Spinner className="mr-2" />
-                Processando...
-              </>
-            ) : (
-              <>
-                <Check className="mr-2 h-5 w-5" />
-                Aceitar
-              </>
-            )}
-          </Button>
+          {isReadOnly ? (
+            <Button
+              variant="outline"
+              className="flex-1 h-14 text-lg font-semibold"
+              onClick={onBack}
+            >
+              <ArrowLeft className="mr-2 h-5 w-5" />
+              Voltar
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="destructive"
+                className="flex-1 h-14 text-lg font-semibold"
+                onClick={() => setShowRejectDialog(true)}
+                disabled={isSubmitting || !oc}
+              >
+                <X className="mr-2 h-5 w-5" />
+                Recusar
+              </Button>
+              <Button
+                className="flex-1 h-14 text-lg font-semibold"
+                onClick={() => setShowConfirmDialog(true)}
+                disabled={isSubmitting || !avaliacaoPreenchida || !oc}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Spinner className="mr-2" />
+                    Processando...
+                  </>
+                ) : (
+                  <>
+                    <Check className="mr-2 h-5 w-5" />
+                    Aceitar
+                  </>
+                )}
+              </Button>
+            </>
+          )}
         </div>
-        {(!allItemsChecked || !avaliacaoQualidade || !avaliacaoPontualidade || !avaliacaoMASSO) && (
+        {!isReadOnly && !oc && (
+          <p className="text-center text-xs text-destructive mt-2">
+            Vincule uma OC para habilitar as ações
+          </p>
+        )}
+        {!isReadOnly && oc && !avaliacaoPreenchida && (
           <p className="text-center text-xs text-muted-foreground mt-2">
-            {!allItemsChecked
-              ? "Marque todos os itens para confirmar a entrada"
-              : "Preencha todas as avaliações para confirmar a entrada"}
+            Preencha todas as avaliações para confirmar a entrada
           </p>
         )}
       </div>

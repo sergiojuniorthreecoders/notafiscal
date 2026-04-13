@@ -1,274 +1,124 @@
 import type { APIConfig, NotaFiscal, OrdemCompra, HistoricoEntry } from "./types"
-import { mockNotasFiscais, mockOrdensCompra, mockHistorico } from "./mock-data"
 
-// Simular delay de rede
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+// ── NF-e ────────────────────────────────────────────────────────────────────
 
-// Função para gerar headers de autenticação
-function getAuthHeaders(config: APIConfig): HeadersInit {
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-  }
-
-  switch (config.auth.type) {
-    case "bearer":
-      if (config.auth.token) {
-        headers["Authorization"] = `Bearer ${config.auth.token}`
-      }
-      break
-    case "apikey":
-      if (config.auth.apiKey && config.auth.headerName) {
-        headers[config.auth.headerName] = config.auth.apiKey
-      }
-      break
-    case "basic":
-      if (config.auth.username && config.auth.password) {
-        const credentials = btoa(`${config.auth.username}:${config.auth.password}`)
-        headers["Authorization"] = `Basic ${credentials}`
-      }
-      break
-  }
-
-  return headers
-}
-
-// Mock: Buscar NF-e por chave de acesso
 export async function fetchNFeByChave(
   chaveAcesso: string,
-  config: APIConfig,
-  useMock = true
+  _config?: APIConfig,
+  _useMock?: boolean
 ): Promise<NotaFiscal | null> {
-  await delay(800) // Simular latência
-
-  if (useMock) {
-    // Modo mock: buscar nos dados simulados
-    const nfe = mockNotasFiscais.find((nf) => nf.chaveAcesso === chaveAcesso)
-    return nfe || null
-  }
-
-  // Modo real: chamar API do ERP
-  try {
-    const response = await fetch(`${config.baseUrl}${config.endpoints.consultaNFe}/${chaveAcesso}`, {
-      method: "GET",
-      headers: getAuthHeaders(config),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Erro ao consultar NF-e: ${response.statusText}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error("Erro ao buscar NF-e:", error)
-    throw error
-  }
+  const res = await fetch(`/api/nfe?chave=${encodeURIComponent(chaveAcesso)}`)
+  if (!res.ok) return null
+  return res.json()
 }
 
-// Mock: Listar todas as NF-es
 export async function fetchNFes(
-  config: APIConfig,
+  _config?: APIConfig,
   filters?: { dataInicio?: string; dataFim?: string; numero?: string },
-  useMock = true
+  _useMock?: boolean
 ): Promise<NotaFiscal[]> {
-  await delay(600)
+  const res = await fetch("/api/nfe")
+  if (!res.ok) return []
+  const all: NotaFiscal[] = await res.json()
 
-  if (useMock) {
-    let result = [...mockNotasFiscais]
+  let result = all
+  if (filters?.numero)
+    result = result.filter((n) => n.numero.includes(filters.numero!))
+  if (filters?.dataInicio)
+    result = result.filter((n) => n.dataEmissao >= filters.dataInicio!)
+  if (filters?.dataFim)
+    result = result.filter((n) => n.dataEmissao <= filters.dataFim!)
 
-    if (filters?.numero) {
-      result = result.filter((nf) => nf.numero.includes(filters.numero!))
-    }
-
-    if (filters?.dataInicio) {
-      result = result.filter((nf) => nf.dataEmissao >= filters.dataInicio!)
-    }
-
-    if (filters?.dataFim) {
-      result = result.filter((nf) => nf.dataEmissao <= filters.dataFim!)
-    }
-
-    return result
-  }
-
-  try {
-    const params = new URLSearchParams()
-    if (filters?.dataInicio) params.append("dataInicio", filters.dataInicio)
-    if (filters?.dataFim) params.append("dataFim", filters.dataFim)
-    if (filters?.numero) params.append("numero", filters.numero)
-
-    const response = await fetch(
-      `${config.baseUrl}${config.endpoints.consultaNFe}?${params.toString()}`,
-      {
-        method: "GET",
-        headers: getAuthHeaders(config),
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error(`Erro ao listar NF-es: ${response.statusText}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error("Erro ao listar NF-es:", error)
-    throw error
-  }
+  return result
 }
 
-// Mock: Buscar Ordem de Compra por ID ou NF-e
+export async function updateNFeStatus(
+  id: string,
+  patch: Partial<NotaFiscal>
+): Promise<NotaFiscal | null> {
+  const res = await fetch(`/api/nfe?id=${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  })
+  if (!res.ok) return null
+  return res.json()
+}
+
+// ── Ordens de Compra ────────────────────────────────────────────────────────
+
 export async function fetchOCByNFe(
-  nfeId: string,
-  config: APIConfig,
-  useMock = true
+  ordemCompraNumero: string,
+  _config?: APIConfig,
+  _useMock?: boolean
 ): Promise<OrdemCompra | null> {
-  await delay(500)
-
-  if (useMock) {
-    const nfe = mockNotasFiscais.find((nf) => nf.id === nfeId)
-    if (nfe?.ordemCompraId) {
-      return mockOrdensCompra.find((oc) => oc.id === nfe.ordemCompraId) || null
-    }
-    return null
-  }
-
-  try {
-    const response = await fetch(
-      `${config.baseUrl}${config.endpoints.consultaOC}?nfeId=${nfeId}`,
-      {
-        method: "GET",
-        headers: getAuthHeaders(config),
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error(`Erro ao buscar OC: ${response.statusText}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error("Erro ao buscar OC:", error)
-    throw error
-  }
+  if (!ordemCompraNumero) return null
+  const res = await fetch(`/api/oc?numero=${encodeURIComponent(ordemCompraNumero)}`)
+  if (!res.ok) return null
+  return res.json()
 }
 
-// Mock: Listar Ordens de Compra
 export async function fetchOCs(
-  config: APIConfig,
+  _config?: APIConfig,
   filters?: { status?: string; numero?: string },
-  useMock = true
+  _useMock?: boolean
 ): Promise<OrdemCompra[]> {
-  await delay(600)
+  const res = await fetch("/api/oc")
+  if (!res.ok) return []
+  const all: OrdemCompra[] = await res.json()
 
-  if (useMock) {
-    let result = [...mockOrdensCompra]
+  let result = all
+  if (filters?.status) result = result.filter((o) => o.status === filters.status)
+  if (filters?.numero) result = result.filter((o) => o.numero.includes(filters.numero!))
 
-    if (filters?.status) {
-      result = result.filter((oc) => oc.status === filters.status)
-    }
-
-    if (filters?.numero) {
-      result = result.filter((oc) => oc.numero.includes(filters.numero!))
-    }
-
-    return result
-  }
-
-  try {
-    const params = new URLSearchParams()
-    if (filters?.status) params.append("status", filters.status)
-    if (filters?.numero) params.append("numero", filters.numero)
-
-    const response = await fetch(
-      `${config.baseUrl}${config.endpoints.consultaOC}?${params.toString()}`,
-      {
-        method: "GET",
-        headers: getAuthHeaders(config),
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error(`Erro ao listar OCs: ${response.statusText}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error("Erro ao listar OCs:", error)
-    throw error
-  }
+  return result
 }
 
-// Mock: Registrar entrada de NF-e
+export async function updateOCItems(
+  ocId: string,
+  patch: Partial<OrdemCompra>
+): Promise<OrdemCompra | null> {
+  const res = await fetch(`/api/oc?id=${encodeURIComponent(ocId)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  })
+  if (!res.ok) return null
+  return res.json()
+}
+
+// ── Registro de Entrada ─────────────────────────────────────────────────────
+
 export async function registrarEntradaNFe(
   nfeId: string,
-  config: APIConfig,
-  useMock = true
+  _config?: APIConfig,
+  _useMock?: boolean
 ): Promise<{ success: boolean; message: string }> {
-  await delay(1000)
+  const updated = await updateNFeStatus(nfeId, {
+    status: "processada",
+    dataRecebimento: new Date().toISOString().split("T")[0],
+  })
 
-  if (useMock) {
-    // Simular sucesso com 90% de chance
-    const success = Math.random() > 0.1
-
-    if (success) {
-      // Atualizar status no mock (em produção seria persistido no ERP)
-      const nfe = mockNotasFiscais.find((nf) => nf.id === nfeId)
-      if (nfe) {
-        nfe.status = "processada"
-        nfe.dataRecebimento = new Date().toISOString().split("T")[0]
-      }
-
-      return {
-        success: true,
-        message: "Entrada registrada com sucesso no ERP",
-      }
-    }
-
-    return {
-      success: false,
-      message: "Falha na comunicação com o ERP. Tente novamente.",
-    }
+  if (updated) {
+    return { success: true, message: "Entrada registrada com sucesso" }
   }
-
-  try {
-    const response = await fetch(`${config.baseUrl}${config.endpoints.entradaNF}`, {
-      method: "POST",
-      headers: getAuthHeaders(config),
-      body: JSON.stringify({ nfeId }),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Erro ao registrar entrada: ${response.statusText}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error("Erro ao registrar entrada:", error)
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : "Erro desconhecido",
-    }
-  }
+  return { success: false, message: "Falha ao registrar entrada" }
 }
 
-// Mock: Obter histórico de operações
-export async function fetchHistorico(useMock = true): Promise<HistoricoEntry[]> {
-  await delay(400)
+// ── Histórico ───────────────────────────────────────────────────────────────
 
-  if (useMock) {
-    return [...mockHistorico].sort(
-      (a, b) => new Date(b.dataHora).getTime() - new Date(a.dataHora).getTime()
-    )
-  }
-
-  // Em produção, buscar do backend
-  return []
+export async function fetchHistorico(_useMock?: boolean): Promise<HistoricoEntry[]> {
+  const res = await fetch("/api/historico")
+  if (!res.ok) return []
+  return res.json()
 }
 
-// Adicionar entrada ao histórico (mock)
-export function addToHistorico(entry: Omit<HistoricoEntry, "id">): void {
-  const newEntry: HistoricoEntry = {
-    ...entry,
-    id: `hist-${Date.now()}`,
-  }
-  mockHistorico.unshift(newEntry)
+export async function addToHistorico(
+  entry: Omit<HistoricoEntry, "id">
+): Promise<void> {
+  await fetch("/api/historico", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(entry),
+  })
 }

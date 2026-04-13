@@ -34,6 +34,11 @@ export interface NotaFiscal {
   itens: NFItem[]
   status: "pendente" | "processada" | "erro" | "recusada"
   ordemCompraId?: string
+  avaliacao?: {
+    qualidade: string
+    pontualidade: string
+    masso: string
+  }
 }
 
 // Tipos de Ordem de Compra

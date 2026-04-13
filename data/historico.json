@@ -1,0 +1,22 @@
+[
+  {
+    "tipo": "entrada",
+    "notaFiscalId": "7421",
+    "notaFiscalNumero": "91517",
+    "fornecedor": "ALPHA MARKTEC MATERIAIS ELETRICOS LTDA",
+    "dataHora": "2026-04-13T15:09:14.724Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776092954735"
+  },
+  {
+    "tipo": "entrada",
+    "notaFiscalId": "7845",
+    "notaFiscalNumero": "25887",
+    "fornecedor": "BRASCLEAN ACESSORIOS E PRODUTOS DE LIMPE",
+    "dataHora": "2026-04-13T15:07:01.726Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776092821734"
+  }
+]
