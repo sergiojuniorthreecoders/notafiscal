@@ -97,13 +97,6 @@ export function LoginScreen() {
               )}
             </Button>
           </form>
-
-          <div className="mt-6 rounded-lg bg-white/10 border border-white/20 p-4 text-sm text-white/70">
-            <p className="font-medium mb-2 text-white">Credenciais de teste:</p>
-            <p>Admin: admin@empresa.com</p>
-            <p>Operador: operador@empresa.com</p>
-            <p>Senha: 123456</p>
-          </div>
         </CardContent>
       </Card>
     </div>
