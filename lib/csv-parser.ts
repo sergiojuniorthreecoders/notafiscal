@@ -186,6 +186,7 @@ export function parseOrdensCompra(filePath: string): OrdemCompra[] {
     const row = rows[r]
     if (row.length < 10) continue
 
+    const codColigada = (row[0] || "").trim()
     const idmov = row[idx["IDMOV"]] || ""
     const numeromov = row[idx["NUMEROMOV"]] || ""
     const nomefantasia = row[idx["NOMEFANTASIA"]] || ""
@@ -226,6 +227,7 @@ export function parseOrdensCompra(filePath: string): OrdemCompra[] {
       const dataPrevisao = isPlaceholder(dataSaida) ? dataEmissao : toISO(dataSaida)
       ocMap.set(idmov, {
         id: idmov,
+        codColigada,
         numero: numeromov,
         fornecedor: { cnpj: "", razaoSocial: nomefantasia },
         dataEmissao,

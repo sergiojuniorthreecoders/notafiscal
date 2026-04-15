@@ -1,0 +1,1576 @@
+{
+  "InternalId": "1|2500",
+  "CompanyId": 0,
+  "MovementId": 0,
+  "BranchId": 0,
+  "WarehouseCode": "string",
+  "DeliveryWarehouseCode": "string",
+  "DestinyWarehouseCode": "string",
+  "CustomerVendorCompanyId": 0,
+  "CustomerVendorCode": "string",
+  "CustomerVendorNatureCodeCompanyId": 0,
+  "CustomerVendorNatureCode": "string",
+  "Number": "string",
+  "Series": "string",
+  "MovementTypeCode": "string",
+  "Type": "string",
+  "Status": "string",
+  "ExtraDate2": "2026-04-15T16:30:53Z",
+  "FreightPercentage": 0,
+  "ExtraPercentage2": 0,
+  "TransportedProductBrand": "string",
+  "GeneratedEntryNumber": 0,
+  "CancellationDate": "2026-04-15T16:30:53Z",
+  "AccountingEventCode": 0,
+  "FreeField3": "string",
+  "ScheduledDeliveryDate": "2026-04-15T16:30:53Z",
+  "ProcessedFlag": true,
+  "EmailStatus": true,
+  "ServiceProviderCityCode": "string",
+  "PreviusScheduleDate": "2026-04-15T16:30:53Z",
+  "DocumentTypeCode": "string",
+  "ConditionalDiscountValue": 0,
+  "ConditionalExpenseValue": 0,
+  "IRRFDeductionCode": "string",
+  "IRRFDeductionPercentage": 0,
+  "EmployerBaseINSSPercentage": 0,
+  "EmployeeBaseINSSPercentage": 0,
+  "DestinyDepartmentCode": "string",
+  "AccountingDate": "2026-04-15T16:30:53Z",
+  "TransportRouteCode": "string",
+  "ServiceTotalValue": 0,
+  "OriginalOtherValues": 0,
+  "OriginalFinancialEntryApportionmentValue": 0,
+  "ProcessingDate": "2026-04-15T16:30:53Z",
+  "FreightNatureId": 0,
+  "OperationId": 0,
+  "RECCREATEDBY": "string",
+  "RECCREATEDON": "2026-04-15T16:30:53Z",
+  "AffectStockOrder": 0,
+  "RECMODIFIEDBY": "string",
+  "RECMODIFIEDON": "2026-04-15T16:30:53Z",
+  "PartialBillingReceivedValue": 0,
+  "CompletedValue": 0,
+  "TSSId": "string",
+  "ConclusionFlag": 0,
+  "ParadigmaStatus": "string",
+  "PredominantProduct": "string",
+  "TotvsColabGeneratedStatus": 0,
+  "DeliveryDistanceTravelled": 0,
+  "FreightCalculationUnit": "string",
+  "FreightCalculationForm": "string",
+  "CommercialAutomationExported": 0,
+  "AplicationIntegration": "string",
+  "ConsumptionClass": "string",
+  "SubscriberType": "string",
+  "Level": "string",
+  "UtilizationType": "string",
+  "TensionGroup": "string",
+  "EntryDate": "2026-04-15T16:30:53Z",
+  "Extemporaneous": 0,
+  "IgnoreRSNMovement": 0,
+  "NFEReceiptStatus": "string",
+  "NFEReceiptType": 0,
+  "NFEReceiptNumber": "string",
+  "NFEReceiptSituation": 0,
+  "CustomerVendorHistoryId": 0,
+  "AutonomousOC": 0,
+  "MerchandiseValue": 0,
+  "VolumesNature": "string",
+  "Volumes": "string",
+  "OperationRestartCounter": 0,
+  "UsesFinancialValueApportionment": true,
+  "NFEReceiptSeries": "string",
+  "OriginCustomerVendorCompanyId": 0,
+  "OriginCustomerVendor": "string",
+  "CTRCApportionmentValue": 0,
+  "AuxCustomerVendorCompanyId": 0,
+  "OtherCompanyINSSBaseValue": 0,
+  "CustomerVendorCeiId": 0,
+  "NFeAccesskey": "string",
+  "SecCatValue": 0,
+  "DispatchValue": 0,
+  "TollValue": 0,
+  "OtherFreightValue": 0,
+  "TaxRelief": 0,
+  "FreightValue": 0,
+  "InsurancePercentage": 0,
+  "InsuranceValue": 0,
+  "DiscountPercentage": 0,
+  "DiscountValue": 0,
+  "ExpensePercentage": 0,
+  "ExpenseValue": 0,
+  "ExtraPercentage1": 0,
+  "ExtraValue1": 0,
+  "ExtraValue2": 0,
+  "MessageCode": "string",
+  "Message2Code": "string",
+  "TransportRoute": "string",
+  "VehiclePlate": "string",
+  "VehiclePlateStateCode": "string",
+  "TransportedProductNetWeight": 0,
+  "TransportedProductGrossWeight": 0,
+  "TransportedProductNumber": 0,
+  "TransportedProductQuantity": 0,
+  "TransportedProductKind": "string",
+  "ClassificationTable1Code": "string",
+  "ClassificationTable2Code": "string",
+  "ClassificationTable3Code": "string",
+  "ClassificationTable4Code": "string",
+  "ClassificationTable5Code": "string",
+  "FinancialOptionalTable1Code": "string",
+  "FinancialOptionalTable2Code": "string",
+  "FinancialOptionalTable3Code": "string",
+  "FinancialOptionalTable4Code": "string",
+  "FinancialOptionalTable5Code": "string",
+  "RelatedMovementId": 0,
+  "FinancialEntryMovementId": 0,
+  "UnfoldedOrderId": 0,
+  "NetValueCurrencyCode": "string",
+  "BaseDate": "2026-04-15T16:30:53Z",
+  "Date": "2026-04-15T16:30:53Z",
+  "HasGeneratedBill": true,
+  "OpenEntryNumber": 0,
+  "ExportFlag": 0,
+  "BillIssuer": "string",
+  "DiscountMessageCode": "string",
+  "ExpenseMessageCode": "string",
+  "FreightMessageCode": "string",
+  "FreightType": 0,
+  "UsesFinancialExpense": 0,
+  "TreasuryDepartmentExportFlag": 0,
+  "AdvanceValue": 0,
+  "CarrierCode": "string",
+  "Carrier2Code": "string",
+  "ReleaseStatus": 0,
+  "AuxCustomerVendorCode": "string",
+  "BillingLotId": 0,
+  "GroupedItems": 0,
+  "BillingPrintFlag": "string",
+  "RecievedValue": 0,
+  "SecondNumber": "string",
+  "CostCenterCode": "string",
+  "CashAccountCode": "string",
+  "Salesman1Code": "string",
+  "Salesman2Code": "string",
+  "Salesman3Code": "string",
+  "Salesman4Code": "string",
+  "ChargePercentage": 0,
+  "Salesman2ChargePercentage": 0,
+  "Salesman3ChargePercentage": 0,
+  "Salesman4ChargePercentage": 0,
+  "CustomerVendorNatureCompanyId": 0,
+  "UserCode": "string",
+  "DeliveryBranchId": 0,
+  "DestinyBranchId": 0,
+  "FluxusGroupedFlag": 0,
+  "CashAccountCompanyId": 0,
+  "LotGenerated": true,
+  "DepartmentCode": "string",
+  "DestinyCostCenterCode": "string",
+  "CostCenterDepartmentApportionmentValue": 0,
+  "FinancialEntryApportionmentValue": 0,
+  "CustomerVendorBillingTransferCompanyId": 0,
+  "CustomerVendorBillingTransfer": "string",
+  "DiscountApprovalUserCode": "string",
+  "IntegrationId": "string",
+  "PreviousStatus": "string",
+  "OriginalGrossValue": 0,
+  "OriginalNetValue": 0,
+  "AccountingExportStatus": 0,
+  "ExportedAccountingLotCode": 0,
+  "CheckReceiveStatus": 0,
+  "DeliveryDate": "2026-04-15T16:30:53Z",
+  "ScheduleDate": "2026-04-15T16:30:53Z",
+  "FiscalNatureId": 0,
+  "FiscalNature2Id": 0,
+  "FreeField1": "string",
+  "FreeField2": "string",
+  "HasGeneratedWorkAccount": true,
+  "WorkAccountGenerated": true,
+  "LastEditTime": "2026-04-15T16:30:53Z",
+  "FiscalEntryCode": "string",
+  "ClosingDate": "2026-04-15T16:30:53Z",
+  "ClosingDateSequentialNumber": 0,
+  "NoteReceiptNumber": "string",
+  "ProcessesLotId": 0,
+  "MaintenanceObjectId": "string",
+  "IndicateObjectUse": 0,
+  "SubSeries": "string",
+  "PurchaseStatus": "string",
+  "DispatchSiteCode": "string",
+  "ClassificationId": 0,
+  "DeliveryCode": "string",
+  "DeliveryRangeCode": "string",
+  "AccountingType": 0,
+  "FiscalBookkeepingEntryLot": "string",
+  "ProjectId": 0,
+  "CouponNumber": 0,
+  "CashierNumber": 0,
+  "BalanceEffect": 0,
+  "BonumIntegrated": true,
+  "EntryCurrencyCode": "string",
+  "Unnumbered": "string",
+  "ICMSDeductionValue": 0,
+  "ConsumptionType": 0,
+  "RegisterTime": "2026-04-15T16:30:53Z",
+  "ReturnDate": "2026-04-15T16:30:53Z",
+  "CreationUser": "string",
+  "CreationDate": "2026-04-15T16:30:53Z",
+  "DeliveryContactId": 0,
+  "BillingContactId": 0,
+  "SortingStatus": "string",
+  "CTRCFreightValue": 0,
+  "SalesPointCode": "string",
+  "DeliveryTime": 0,
+  "InternalGrossValue": 0,
+  "AuthorizationsId": 0,
+  "StoreFrontStockId": 0,
+  "StoreFrontBound": 0,
+  "ZReductionId": 0,
+  "ExitTime": "2026-04-15T16:30:53Z",
+  "Printed": true,
+  "DocumentPrinted": true,
+  "BillPrinted": true,
+  "RegisterDate": "2026-04-15T16:30:53Z",
+  "ExitDate": "2026-04-15T16:30:53Z",
+  "ExtraDate1": "2026-04-15T16:30:53Z",
+  "ServiceProviderStateCode": "string",
+  "Appropriated": true,
+  "ServiceCode": "string",
+  "DeductionDate": "2026-04-15T16:30:53Z",
+  "LogbookCode": "string",
+  "LogbookSequentialCode": "string",
+  "ReversalLogbookSequentialCode": "string",
+  "OtherCompanyINSSValue": 0,
+  "CTRCMovementId": 0,
+  "CommercialRepresentativeCode": "string",
+  "CommercialRepresentativeCharge": 0,
+  "OrderNumber": "string",
+  "PaymentTermCode": "string",
+  "TaxesNumber": 0,
+  "GrossValue": 0,
+  "NetValue": 0,
+  "OtherValues": 0,
+  "Observation": "string",
+  "AcquiringCnpjCpf": "string",
+  "AcquiringName": "string",
+  "AcquiringForeignDoc": "string",
+  "ScpBranchId": 0,
+  "ContractStatus": "string",
+  "CompletedStatus": "string",
+  "InformedNetValue": 0,
+  "ParadigmaAutoIntegrated": true,
+  "complementaryFields": {},
+  "Items": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "SequentialId": 0,
+      "SequentialNumber": 0,
+      "ProductId": 0,
+      "UnitPrice": 0,
+      "TaxNumber": 0,
+      "ProductTypeCode": "string",
+      "Quantity": 0,
+      "FinancialOptionalTable3Code": "string",
+      "CompositeProductId": 0,
+      "SortedQuantity": 0,
+      "ChargePercentage": 0,
+      "NCMIndex": "string",
+      "NCMId": "string",
+      "CommercialRepresentativeCode": "string",
+      "ClassificationTable1Code": "string",
+      "ClassificationTable2Code": "string",
+      "ClassificationTable3Code": "string",
+      "ClassificationTable4Code": "string",
+      "ClassificationTable5Code": "string",
+      "FinancialOptionalTable1Code": "string",
+      "FinancialOptionalTable2Code": "string",
+      "TablePrice": 0,
+      "DiscountPercentage": 0,
+      "DiscountValue": 0,
+      "ExpensePercentage": 0,
+      "ExpenseValue": 0,
+      "RegisterDate": "2026-04-15T16:30:53Z",
+      "MessageCode": "string",
+      "CommercialRepresentativeChargePercentage": 0,
+      "ContractItemMeasurementSequentialNumber": 0,
+      "FiscalBookkeepingValue": 0,
+      "OrderFinancialValue": 0,
+      "CTRCFreightValue": 0,
+      "OptionalFormulaValue1": 0,
+      "OptionalFormulaValue2": 0,
+      "OfficinaObjectId": "string",
+      "EditedPrice": true,
+      "UnitaryOccupiedVolumeNumber": 0,
+      "GridId": 0,
+      "Salesman1Code": "string",
+      "HeritageSiteCode": "string",
+      "ExportRegisterNumber": "string",
+      "ExportRegisterDate": "2026-04-15T16:30:53Z",
+      "EditedTotalPrice": 0,
+      "CST": "string",
+      "ConditionalDiscountValue": 0,
+      "ConditionalExpenseValue": 0,
+      "BudgetDate": "2026-04-15T16:30:53Z",
+      "BugdetNatureCode": "string",
+      "FreightApportionment": 0,
+      "InsuranceApportionment": 0,
+      "DiscountApportionment": 0,
+      "ExpenseApportionment": 0,
+      "ExtraValue1Apportionment": 0,
+      "ExtraValue2Apportionment": 0,
+      "CTRCFreightApportionment": 0,
+      "MaterialDeductionApportionment": 0,
+      "SubcontractingDeductionApportionment": 0,
+      "OtherDeductionApportionment": 0,
+      "EnergyTelecomItemClassification": 0,
+      "BudgetUnitPrice": 0,
+      "NFeServiceValue": 0,
+      "WarehouseCode": "string",
+      "HeritageValue": 0,
+      "NetValue": 0,
+      "CODIFCode": "string",
+      "ServiceProviderCityCode": "string",
+      "ServiceProviderStateCode": "string",
+      "CostCenterDepartmentApportionmentValue": 0,
+      "ReplenishmentCost": 0,
+      "BReplenishmentCost": 0,
+      "ThirdPartyFinancialValue": 0,
+      "LocalManagementFinancialValue": 0,
+      "ServiceCode": "string",
+      "LocalManagementUnitValue": 0,
+      "IntegrationId": "string",
+      "PriceTableId": 0,
+      "GrossValue": 0,
+      "OriginalGrossValue": 0,
+      "BugdetNatureCompanyId": 0,
+      "PublicationCode": 0,
+      "TotalQuantity": 0,
+      "IsSubstituteProduct": 0,
+      "BudgetGroupCode": "string",
+      "FinancialOptionalTable4Code": "string",
+      "FinancialOptionalTable5Code": "string",
+      "FreeField": "string",
+      "MeasureUnitCode": "string",
+      "ReceivableQuantity": 0,
+      "NatureCode": "string",
+      "PaymentTermCode": "string",
+      "DeliveryDate": "2026-04-15T16:30:53Z",
+      "Shelf": "string",
+      "ContractId": 0,
+      "ContractItemSequentialNumber": 0,
+      "BillingInitialDate": "2026-04-15T16:30:53Z",
+      "BillingFinalDate": "2026-04-15T16:30:53Z",
+      "StockEffectFlag": 0,
+      "UnitValue": 0,
+      "FinancialValue": 0,
+      "BillingType": 0,
+      "CostCenterCode": "string",
+      "TransferFlag": 0,
+      "OrdinationTaxAliquot": 0,
+      "OriginalQuantity": 0,
+      "NatureId": 0,
+      "Flag": 0,
+      "Plate": "string",
+      "InitialDate": "2026-04-15T16:30:53Z",
+      "FinalDate": "2026-04-15T16:30:53Z",
+      "EstimationInitialDate": "2026-04-15T16:30:53Z",
+      "Status": "string",
+      "BlockObject": 0,
+      "RebillingFlag": 0,
+      "DestinyContractId": 0,
+      "DestinyContractItemSequentialNumber": 0,
+      "MeasureUnitConversionRate": 0,
+      "ProjectId": 0,
+      "TaskId": 0,
+      "TotalValue": 0,
+      "ProductCodeValue": "string",
+      "ProductCodeType": 0,
+      "OrderUnitQuantity": 0,
+      "ECFTax": "string",
+      "BranchId": 0,
+      "DepartmentCode": "string",
+      "UnitPriceSelectionType": 0,
+      "FinancialValueApportionment": 0,
+      "TOPContractId": 0,
+      "CompletedQuantity": 0,
+      "ContractBillingDate": "2026-04-15T16:30:53Z",
+      "PartialBillingReceivedValue": 0,
+      "CompletedValue": 0,
+      "ConsignedProduct": 0,
+      "AplicationIntegration": "string",
+      "KBlockSubstituteProductId": 0,
+      "TOPRetentionValue": 0,
+      "TOPRetentionPercentage": 0,
+      "BrandCompanyId": 0,
+      "BrandId": 0,
+      "DeductionValue": 0,
+      "DeductionPercentage": 0,
+      "TaxableQuantity": 0,
+      "SigaMNTHeritageCode": "string",
+      "InterestRate": 0,
+      "ReturnDate": "2026-04-15T16:30:53Z",
+      "TaxRuleId": 0,
+      "complementaryFields": {},
+      "CostCenterApportionments": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "ProjectId": 0,
+          "TaskId": 0,
+          "BudgetGroupCode": "string",
+          "ApportionmentId": 0,
+          "Quantity": 0,
+          "CostCenterCode": "string",
+          "Percentage": 0,
+          "Value": 0,
+          "History": "string",
+          "CostCenterName": "string",
+          "ProjectCode": "string",
+          "TaskCode": "string"
+        }
+      ],
+      "DepartmentApportionments": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "BranchId": 0,
+          "DepartmentCode": "string",
+          "Value": 0,
+          "Percentage": 0,
+          "DepartmentName": "string"
+        }
+      ],
+      "Taxes": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "TaxId": "string",
+          "CalculatedCalculationBasis": 0,
+          "ReferenceUnitCode": "string",
+          "RetainedJudicialProcessValue": 0,
+          "Edited": 0,
+          "ExemptValue": 0,
+          "RetentionCode": "string",
+          "CollectionType": "string",
+          "BaseTaxCode": "string",
+          "ICMSPartialDeferralPercent": 0,
+          "TaxSituation": "string",
+          "BCMode": 0,
+          "AliquotByValue": 0,
+          "FullBase": 0,
+          "SocialContributionCode": "string",
+          "YieldType": "string",
+          "TaxationForm": "string",
+          "FullAliquot": 0,
+          "AliquotReductionPercent": 0,
+          "DeferralPercent": 0,
+          "TaxDeferred": 0,
+          "TaxClassification": "string",
+          "PresumedCreditClassificatioCode": "string",
+          "PresumedCreditPercentage": 0,
+          "PresumedCreditValue": 0,
+          "ICMSExemptionReason": 0,
+          "NFSEOperationNature": "string",
+          "IPIContextCode": "string",
+          "DifferentialICMSCalculationBasis": 0,
+          "ExemptedICMSValue": 0,
+          "RetainedSubcontractingValue": 0,
+          "ExemptedICMSCalculationBasis": 0,
+          "CalculationBasis": 0,
+          "Aliquot": 0,
+          "Value": 0,
+          "ReductionFactory": 0,
+          "TaxSubstitutionFactor": 0,
+          "AliquotReductionGov": 0,
+          "EffectiveAliquotGov": 0
+        }
+      ],
+      "ItemLots": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "LotId": 0,
+          "Quantity": 0,
+          "SortedQuantity": 0,
+          "ReceivableQuantity": 0,
+          "LotNumber": "string",
+          "RelatedLot": [
+            {
+              "_expandables": [
+                "string"
+              ],
+              "OriginCompanyId": 0,
+              "DestinyCompanyId": 0,
+              "OriginMovementId": 0,
+              "DestinyMovementId": 0,
+              "OriginMovementItemSequentialId": 0,
+              "DestinyMovementItemSequentialId": 0,
+              "OriginLotId": 0,
+              "DestinyLotId": 0,
+              "Quantity": 0
+            }
+          ]
+        }
+      ],
+      "ItemGrids": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "ProductId": 0,
+          "GridCode": "string",
+          "GridItemSequentialNumber": 0,
+          "Quantity": 0,
+          "ReceivableQuantity": 0,
+          "SortedQuantity": 0,
+          "ItemGridCode": "string",
+          "RelatedGrid": [
+            {
+              "_expandables": [
+                "string"
+              ],
+              "OriginCompanyId": 0,
+              "DestinyCompanyId": 0,
+              "OriginMovementId": 0,
+              "DestinyMovementId": 0,
+              "OriginMovementItemSequentialId": 0,
+              "DestinyMovementItemSequentialId": 0,
+              "OriginProductId": 0,
+              "DestinyProductId": 0,
+              "OriginGridCode": "string",
+              "DestinyGridCode": "string",
+              "OriginGridItemSequentialNumber": 0,
+              "DestinyGridItemSequentialNumber": 0,
+              "Quantity": 0
+            }
+          ]
+        }
+      ],
+      "ItemSerialNumber": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "ProductId": 0,
+          "SerialNumber": "string",
+          "Pending": 0
+        }
+      ],
+      "ItemHeritage": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "HeritageCode": "string",
+          "HeritageSiteCode": "string"
+        }
+      ],
+      "SiscoServFitting": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "FittingId": 0,
+          "RCNumber": "string"
+        }
+      ],
+      "Fiscal": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "ImportAdditionNumber": 0,
+          "ImportAdditionItemSequentialNumber": 0,
+          "CustomsDiscountValue": 0,
+          "CustomsExpenseValue": 0,
+          "ExportMemoNumber": "string",
+          "ThirdPartyCustomerVendorCode": "string",
+          "FreightNatureIndicator": "string",
+          "IBPTTotalMunicipalTaxValue": 0,
+          "SPEDAccountingAccount": "string",
+          "NFeProductAdditionalInformation": "string",
+          "MerchandiseSituation": "string",
+          "ShippingKnowledge": "string",
+          "ContractedQuantity": 0,
+          "TelephoneTerminalQualificationStateCode": "string",
+          "RevenueType": 0,
+          "ThirdPartyCustomerVendorCompanyId": 0,
+          "CIAPMovementType": "string",
+          "CollectCityCode": "string",
+          "CollectStateCode": "string",
+          "DeliveryCityCode": "string",
+          "DeliveryStateCode": "string",
+          "VehiclePlate": "string",
+          "VehiclePlateStateCode": "string",
+          "RevenueNature": "string",
+          "CreditBaseCode": "string",
+          "CreditTypeCode": "string",
+          "ApproximateTotalTaxValue": null,
+          "RecopiNumber": "string",
+          "IBPTTotalFederalTaxValue": 0,
+          "IBPTTotalStateTaxValue": 0,
+          "IBPTKey": "string",
+          "ThirdPartyBranchId": 0,
+          "OrderItemNumber": 0,
+          "OrderNumber": "string",
+          "ReinfTransferType": "string",
+          "PAAAcquisition": 0,
+          "SPEDAccountingAccountCompanyId": 0
+        }
+      ],
+      "Reserves": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "ProductId": 0,
+          "Type": "string",
+          "ReserveId": 0,
+          "Quantity": 0,
+          "Status": "string"
+        }
+      ],
+      "RelatedItem": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "OriginMovementId": 0,
+          "OriginMovementItemSequentialId": 0,
+          "OriginMovementCompanyId": 0,
+          "DestinyMovementId": 0,
+          "DestinyMovementItemSequentialId": 0,
+          "DestinyMovementCompanyId": 0,
+          "Quantity": 0,
+          "ReceivedValue": 0,
+          "MeasureUnitCode": "string"
+        }
+      ],
+      "ExportRelatedItem": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "OriginMovementId": 0,
+          "OriginMovementItemSequentialId": 0,
+          "OriginMovementCompanyId": 0,
+          "DestinyMovementId": 0,
+          "DestinyMovementItemSequentialId": 0,
+          "DestinyMovementCompanyId": 0,
+          "Quantity": 0,
+          "ReceivedValue": 0,
+          "MeasureUnitCode": "string"
+        }
+      ],
+      "LinkedItem": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "OriginMovementId": 0,
+          "DestinyMovementId": 0,
+          "LinkedValue": 0,
+          "MovementItemSequentialId": 0,
+          "Status": "string"
+        }
+      ],
+      "ExportMemo": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "OriginCompanyId": 0,
+          "OriginMovementId": 0,
+          "OriginMovementItemSequentialId": 0,
+          "Quantity": 0,
+          "ExportMemorandumNumber": "string",
+          "MeasureUnitCode": "string",
+          "MovementNumber": "string",
+          "MovementType": "string"
+        }
+      ],
+      "JudicialProcess": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "MovementItemSequentialId": 0,
+          "ProcessId": 0,
+          "ProcessNumber": "string",
+          "ProcessDescription": "string"
+        }
+      ]
+    }
+  ],
+  "Payments": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "PaymentSequentialId": 0,
+      "MovementId": 0,
+      "PeriodCode": "string",
+      "DebitCredit": "string",
+      "Value": 0,
+      "Description": "string",
+      "PaymentType": 0,
+      "RegisterDate": "2026-04-15T16:30:53Z",
+      "PaymentFormId": 0,
+      "DueDate": "2026-04-15T16:30:53Z",
+      "AgencyDigit": "string",
+      "Discharged": 0,
+      "MultiplePayment": 0,
+      "Dollar": 0,
+      "InstallmentType": 0,
+      "PlotQuantity": 0,
+      "CnpjCpf": "string",
+      "NaturalLegal": "string",
+      "CMC7": "string",
+      "Bank": "string",
+      "Agency": "string",
+      "CurrentAccount": "string",
+      "CurrentAccountDigit": "string",
+      "BankCheck": "string",
+      "BankCheckDigit": "string",
+      "NSU": "string",
+      "ReceiptDate": "2026-04-15T16:30:53Z",
+      "Completion": "string",
+      "NetworkName": "string",
+      "Administrator": "string",
+      "EntryId": 0,
+      "CashAccountCompanyId": 0,
+      "CashAccount": "string",
+      "FreeField": "string",
+      "AdministrateTax": 0,
+      "IssuerName": "string",
+      "IssuerPhone": "string",
+      "CustomerVendorCompanyId": 0,
+      "CustomerVendor": "string",
+      "PaymentFormType": 0,
+      "DefaultCustomerVendorCompanyId": 0,
+      "DefaultCustomerVendorCode": "string",
+      "PaymentFormDescription": "string"
+    }
+  ],
+  "CostCenterApportionments": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "ApportionmentId": 0,
+      "CostCenterCode": "string",
+      "Value": 0,
+      "History": "string",
+      "Percentage": 0,
+      "ProjectId": 0,
+      "TaskId": 0,
+      "BudgetGroupCode": "string",
+      "CostCenterName": "string",
+      "ProjectCode": "string",
+      "TaskCode": "string"
+    }
+  ],
+  "DepartmentApportionments": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "BranchId": 0,
+      "DepartmentCode": "string",
+      "Value": 0,
+      "Percent": 0,
+      "DepartmentName": "string"
+    }
+  ],
+  "Fiscal": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "ImportDeclarationNumber": "string",
+      "ConsumptionEndDate": "2026-04-15T16:30:53Z",
+      "ConsumptionAccount": "string",
+      "VehicleId": "string",
+      "FreightNature": "string",
+      "SingleCargoReference": "string",
+      "NavigationType": "string",
+      "TravelNumber": 0,
+      "PortExpenseValue": 0,
+      "CargoExpenseValue": 0,
+      "NavyFreightValue": 0,
+      "TariffType": "string",
+      "TaxedWeight": 0,
+      "TerrestrianRateValue": 0,
+      "AdValoremRateValue": 0,
+      "GrisValue": 0,
+      "FiscalDocDigitalAuthenticationCode": "string",
+      "ServiceCompetencyDate": "2026-04-15T16:30:53Z",
+      "DRAWBACK": "string",
+      "ProvisionMode": 0,
+      "StartDate": "2026-04-15T16:30:53Z",
+      "CompletedDate": "2026-04-15T16:30:53Z",
+      "PresentialOperation": 0,
+      "NROSAT": "string",
+      "ExportDeclarationNumber": "string",
+      "ExportDeclarationDate": "2026-04-15T16:30:53Z",
+      "ExportNature": 0,
+      "BillOfLading": "string",
+      "BillOfLadingDate": "2026-04-15T16:30:53Z",
+      "BillOfLadingType": 0,
+      "EndorsementDate": "2026-04-15T16:30:53Z",
+      "ImportDeclarationDate": "2026-04-15T16:30:53Z",
+      "MaterialDeductionValue": 0,
+      "SubcontractingDeductionValue": 0,
+      "OtherDeductionValue": 0,
+      "ConsumptionClassId": 0,
+      "BindingTypeId": 0,
+      "TensionGroupId": 0,
+      "ConsumptionUnity": "string",
+      "ConsumptionStartDate": "2026-04-15T16:30:53Z",
+      "ReadingDate": "2026-04-15T16:30:53Z",
+      "PeakDemand": "string",
+      "NoPeakDemand": "string",
+      "TotalConsumption": 0,
+      "CancellationReason": "string",
+      "DispatchValue": 0,
+      "DispatchNumber": "string",
+      "ClearanceDate": "2026-04-15T16:30:53Z",
+      "UseTypeId": 0,
+      "AccreditedTaxpayer": 0,
+      "FinalConsumerOperation": 0,
+      "DisembarrassmentSite": "string",
+      "DisembarrassmenState": "string",
+      "ImportNature": 0,
+      "CreditStartDate": "2026-04-15T16:30:53Z",
+      "RevenueAdditionalInformation": "string",
+      "ComplementaryTaxpayerInformation": "string",
+      "VehicleType": "string",
+      "OperationType": 0,
+      "CNPJCPFServiceRecipient": "string",
+      "NIFServiceRecipient": "string",
+      "NoNIFServiceRecipient": "string",
+      "NameServiceRecipient": "string",
+      "MunicipalityCodeServiceRecipient": "string",
+      "PostalCodeServiceRecipient": "string",
+      "CountryCodeServiceRecipient": 0,
+      "StateCodeServiceRecipient": "string",
+      "StreetServiceRecipient": "string",
+      "NumberServiceRecipient": "string",
+      "AddressComplementServiceRecipient": "string",
+      "NeighborhoodServiceRecipient": "string",
+      "PhoneServiceRecipient": "string",
+      "EmailServiceRecipient": "string"
+    }
+  ],
+  "Taxes": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "MovementItemSequentialId": 0,
+      "TaxId": "string",
+      "CalculatedCalculationBasis": 0,
+      "ReferenceUnitCode": "string",
+      "RetainedJudicialProcessValue": 0,
+      "Edited": 0,
+      "ExemptValue": 0,
+      "RetentionCode": "string",
+      "CollectionType": "string",
+      "BaseTaxCode": "string",
+      "ICMSPartialDeferralPercent": 0,
+      "TaxSituation": "string",
+      "BCMode": 0,
+      "AliquotByValue": 0,
+      "FullBase": 0,
+      "SocialContributionCode": "string",
+      "YieldType": "string",
+      "TaxationForm": "string",
+      "FullAliquot": 0,
+      "AliquotReductionPercent": 0,
+      "DeferralPercent": 0,
+      "TaxDeferred": 0,
+      "TaxClassification": "string",
+      "PresumedCreditClassificatioCode": "string",
+      "PresumedCreditPercentage": 0,
+      "PresumedCreditValue": 0,
+      "ICMSExemptionReason": 0,
+      "NFSEOperationNature": "string",
+      "IPIContextCode": "string",
+      "DifferentialICMSCalculationBasis": 0,
+      "ExemptedICMSValue": 0,
+      "RetainedSubcontractingValue": 0,
+      "ExemptedICMSCalculationBasis": 0,
+      "CalculationBasis": 0,
+      "Aliquot": 0,
+      "Value": 0,
+      "ReductionFactory": 0,
+      "TaxSubstitutionFactor": 0,
+      "AliquotReductionGov": 0,
+      "EffectiveAliquotGov": 0
+    }
+  ],
+  "Norm": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "ReferencedNormId": 0
+    }
+  ],
+  "CargoComponent": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "VehiclePlateStateCode": "string",
+      "VehiclePlate": "string",
+      "CargoNumber": 0,
+      "GrossWeight": 0,
+      "NetWeight": 0
+    }
+  ],
+  "ThirdPartyNF": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "ThirdPartyNFId": 0,
+      "DocumentTypeCode": "string",
+      "Number": "string",
+      "Series": "string",
+      "SubSeries": "string",
+      "IssuerCnpjCpfCEI": "string",
+      "IssuerStateCode": "string",
+      "ReferenceReason": "string",
+      "Observation": "string",
+      "TotalValue": 0,
+      "IE": "string",
+      "RegisterDate": "2026-04-15T16:30:53Z"
+    }
+  ],
+  "SafetyDevice": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "SafetyDeviceCode": "string"
+    }
+  ],
+  "NFe": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "ServiceCode": "string",
+      "ServiceValue": 0,
+      "ServiceDeduction": 0,
+      "ISSAliquot": 0,
+      "RetainedISS": 0,
+      "NFENumber": "string",
+      "NFEVerificationCode": "string",
+      "RegisterDate": "2026-04-15T16:30:53Z",
+      "RegisterHour": "2026-04-15T16:30:53Z",
+      "CancellationDate": "2026-04-15T16:30:53Z",
+      "GuideNumber": "string",
+      "DischargeGuideDate": "2026-04-15T16:30:53Z",
+      "ISSValue": 0,
+      "IPTUCreditValue": 0,
+      "Discrimination": "string",
+      "CalculationBasis": 0,
+      "Edited": true
+    }
+  ],
+  "InputCTRC": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "NFMovementId": 0,
+      "CTRCMovementId": 0,
+      "CNPJ": "string",
+      "IE": "string",
+      "StateCode": "string",
+      "CityCode": "string",
+      "SenderAddresseeCompanyName": "string"
+    }
+  ],
+  "OutputCTRC": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "BillSequentialNumber": 0,
+      "RegisterDate": "2026-04-15T16:30:53Z",
+      "DocumentTypeCode": "string",
+      "DocumentSeries": "string",
+      "DocumentSubSeries": "string",
+      "DocumentNumber": "string",
+      "TotalValue": 0,
+      "CoveredMovementId": 0,
+      "CNPJ": "string",
+      "IE": "string",
+      "StateCode": "string",
+      "CityCode": "string",
+      "SenderAddresseeCompanyName": "string",
+      "MerchandiseValue": 0,
+      "VolumesNature": "string",
+      "Quantity": 0,
+      "Volumes": "string",
+      "Brand": "string",
+      "TransportedProductKind": "string",
+      "CargoNumber": 0,
+      "GrossWeigth": 0,
+      "NetWeigth": 0,
+      "NatureCode": "string",
+      "ICMSCalculationBasis": 0,
+      "ICMSTotalValue": 0,
+      "ICMSSTCalculationBasis": 0,
+      "ICMSSTTotalValue": 0,
+      "ProductsTotalValue": 0,
+      "NFEAccessKey": "string",
+      "CollectStateCode": "string",
+      "DeliveryStateCode": "string",
+      "CollectCityCode": "string",
+      "DeliveryCityCode": "string",
+      "IssuerCNPJ": "string",
+      "DocumentLinkType": 0,
+      "SecondBarCodeRegisterDate": "2026-04-15T16:30:53Z",
+      "SecondBarCodeValue": 0,
+      "SecondBarCodeTaxSituation": "string",
+      "SecondBarCodeNFE": "string",
+      "CNPJCIOTCTE": "string",
+      "CIOTCTe": "string",
+      "ContainerId": "string",
+      "PaymentResponsibleName": "string",
+      "ResponsibleType": 0,
+      "Foreign": 0,
+      "HazardousCargo": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "NoteSequentialNumber": 0,
+          "HazardousCargoId": 0,
+          "UNNumber": "string",
+          "ProductShippingName": "string",
+          "SecondaryClassAndRisk": "string",
+          "PackageNumber": "string",
+          "ProductTotalQuantity": "string",
+          "VolumeTypeAndQuantity": "string"
+        }
+      ]
+    }
+  ],
+  "CTRC": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "BillValue": 0,
+      "ApportionedValue": 0,
+      "BillQuantity": 0,
+      "ApportionedBillQuantity": 0
+    }
+  ],
+  "TransportData": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "DeliveryStateCode": "string",
+      "DeliveryCityCode": "string",
+      "CollectStateCode": "string",
+      "CollectCityCode": "string",
+      "SenderType": "string",
+      "SenderCustomerVendorCompanyId": 0,
+      "SenderCustomerVendorCode": "string",
+      "SenderBranchId": 0,
+      "AddresseeType": "string",
+      "AddresseeCustomerVendorCompanyId": 0,
+      "AddresseeCustomerVendorCode": "string",
+      "AddresseeBranchId": 0,
+      "RedispatchingCarrierCode": "string",
+      "CollectCnpjCpf": "string",
+      "CollectIE": "string",
+      "CollectIM": "string",
+      "DeliveryCnpjCpf": "string",
+      "DeliveryIE": "string",
+      "DeliveryIM": "string",
+      "RedispatchingFreightType": "string",
+      "CollectStreet": "string",
+      "CollectStreetNumber": "string",
+      "CollectAddressComplement": "string",
+      "CollectNeighborhood": "string",
+      "DeliveryStreet": "string",
+      "DeliveryStreetNumber": "string",
+      "DeliveryAddressComplement": "string",
+      "DeliveryNeighborhood": "string",
+      "CollectName": "string",
+      "DeliveryName": "string",
+      "WithdrawMerchandise": 0,
+      "CTeType": 0,
+      "CTeServiceType": 0,
+      "MDFeIssuerType": 0,
+      "DispatcherType": "string",
+      "DispatcherCustomerVendorCompanyId": 0,
+      "DispatcherCosutmerVendorCode": "string",
+      "DispatcherBranchId": 0,
+      "ReceiverType": "string",
+      "ReceiverCustomerVendorCompanyId": 0,
+      "ReceiverCustomerVendorCode": "string",
+      "ReceiverBranchId": 0,
+      "ForeignCollectCityCode": "string",
+      "ForeignDeliveryCityCode": "string",
+      "TakerType": 0,
+      "TakerICMSTaxpayer": 0,
+      "TakerCustomerVendorCompanyId": 0,
+      "TakerCustomerVendorCode": "string",
+      "CIOT": "string",
+      "Capacity": 0,
+      "MDFeTransporterType": 0,
+      "GlobalizedObservation": "string",
+      "BPeType": 0,
+      "NegotiableIndicator": 0,
+      "PeopleFreightageType": 0,
+      "TravelDateTime": "2026-04-15T16:30:53Z",
+      "DisagreementDate": "2026-04-15T16:30:53Z",
+      "DeliveryZipCode": "string",
+      "DeliveryCountryCode": 0,
+      "DeliveryPhone": "string",
+      "DeliveryEmail": "string",
+      "DeliveryCustomerVendorCompanyId": 0,
+      "DeliveryCustomerVendorCode": "string",
+      "CollectZipCode": "string",
+      "CollectCountryCode": 0,
+      "CollectPhone": "string",
+      "CollectEmail": "string",
+      "CollectCustomerVendorCompanyId": 0,
+      "CollectCustomerVendorCode": "string"
+    }
+  ],
+  "DocumentAuthorization": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "ResponsibleSequentialNumber": 0,
+      "ResponsibleCode": "string"
+    }
+  ],
+  "JudicialProcess": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "Sequential": 0,
+      "ReferencedProcessId": 0,
+      "FiscalEntryId": 0
+    }
+  ],
+  "ServiceOrder": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "ProcessingStatus": "string",
+      "ServiceOrderId": 0,
+      "SubStatusId": 0,
+      "ScheduleDate": "2026-04-15T16:30:53Z",
+      "Remodeling": true,
+      "Plan": "string",
+      "ObjectId": "string",
+      "HistoryId": 0,
+      "CancelationReasonCode": 0,
+      "ResponsiblePlateCompanyId": 0,
+      "ResponsiblePlate": "string",
+      "ReformProcessCode": 0,
+      "ObjectTypeId": 0,
+      "ThirdPartyServiceOrder": true,
+      "EmailSent": 0,
+      "SendingDate": "2026-04-15T16:30:53Z"
+    }
+  ],
+  "RelatedMovement": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "OriginMovementId": 0,
+      "OriginCompanyId": 0,
+      "DestinyMovementId": 0,
+      "DestinyCompanyId": 0,
+      "RelationType": "string",
+      "ProcessId": 0,
+      "ReceivedValue": 0
+    }
+  ],
+  "ExportRelatedMovement": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "OriginMovementId": 0,
+      "OriginCompanyId": 0,
+      "DestinyMovementId": 0,
+      "DestinyCompanyId": 0,
+      "RelationType": "string",
+      "ProcessId": 0,
+      "ReceivedValue": 0
+    }
+  ],
+  "LinkedMovement": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "MovementValue": 0,
+      "LinkedValue": 0,
+      "LinkType": 0
+    }
+  ],
+  "EAIIntegration": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "IntegrationStatus": "string",
+      "TriggerContext": "string",
+      "AppropriateMovementIn": "string",
+      "GlobalId": "string",
+      "IsTotvsMessage": true,
+      "GenerateTriggerTotvsMessage": true
+    }
+  ],
+  "CTE": [
+    {
+      "_expandables": [
+        "string"
+      ],
+      "CompanyId": 0,
+      "MovementId": 0,
+      "CTEId": 0,
+      "Type": "string",
+      "Insurance": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "InsuranceSequentialId": 0,
+          "Responsible": 0,
+          "InsurerCode": "string",
+          "Policy": "string",
+          "MerchandiseValue": 0,
+          "Endorsement": "string",
+          "CTEId": 0,
+          "InsurerCompanyId": 0,
+          "InsurerId": 0,
+          "InsuranceResponsibleCNPJ": "string"
+        }
+      ],
+      "Driver": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "MovementId": 0,
+          "CTEId": 0,
+          "DriverSequentialId": 0,
+          "CPF": "string",
+          "Name": "string"
+        }
+      ],
+      "WaterborneTransport": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "CTeId": 0,
+          "NavigationAgencyCNPJ": "string",
+          "VesselType": 0,
+          "VesselCode": "string",
+          "TravelNumber": 0,
+          "OriginPortCode": "string",
+          "DestinyPortCode": "string",
+          "NavigationType": 0,
+          "AFRMMCalculationBasis": 0,
+          "AFRMMValue": 0,
+          "ShipId": "string",
+          "Direction": "string",
+          "ShipIrin": "string"
+        }
+      ],
+      "PredominantProduct": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "CTeId": 0,
+          "LoadingLatitude": "string",
+          "CargoType": "string",
+          "Description": "string",
+          "EANCode": "string",
+          "NCMCode": "string",
+          "LoadingZipCode": "string",
+          "LoadingLongitude": "string",
+          "UnloadingZipCode": "string",
+          "UnloadingLatitude": "string",
+          "UnloadingLongitude": "string"
+        }
+      ],
+      "AirborneTransport": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "CTeId": 0,
+          "FlightNumber": "string",
+          "BoardingAerodrome": "string",
+          "LandingAerodrome": "string",
+          "FlightDate": "2026-04-15T16:30:53Z",
+          "DraftNumber": "string",
+          "OperationalNumber": "string",
+          "CargoNatureDimension": "string",
+          "Class": "string",
+          "TariffCode": "string",
+          "TariffValue": 0,
+          "Nationality": "string",
+          "Registration": "string"
+        }
+      ],
+      "Ferry": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "CTeId": 0,
+          "FerrySequentialId": 0,
+          "Ferry": "string"
+        }
+      ],
+      "PreviousDocumentIssuer": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "CTeId": 0,
+          "MovementId": 0,
+          "IssuerSequentialId": 0,
+          "CNPJCPF": "string",
+          "IE": "string",
+          "Name": "string",
+          "StateCode": "string",
+          "Documents": [
+            {
+              "_expandables": [
+                "string"
+              ],
+              "CompanyId": 0,
+              "CTeId": 0,
+              "MovementId": 0,
+              "FiscalDocumentNumber": "string",
+              "RegisterDate": "2026-04-15T16:30:53Z",
+              "NFeAccesskey": "string",
+              "IssuerSequentialId": 0,
+              "DocumentSequentialId": 0,
+              "OriginDocumentType": "string",
+              "Series": "string",
+              "SubSeries": "string"
+            }
+          ]
+        }
+      ],
+      "HazardousCargo": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "CTeId": 0,
+          "ProductTotalQuantity": "string",
+          "VolumeTypeAndQuantity": "string",
+          "FlashPoint": "string",
+          "DangerousItemsTotalQuantity": 0,
+          "AirborneTransportMeasureUnit": "string",
+          "HazardousCargoId": 0,
+          "UNNumber": "string",
+          "ProductShippingName": "string",
+          "SecondaryClassAndRisk": "string",
+          "PackageNumber": "string",
+          "MeasureUnit": "string"
+        }
+      ],
+      "RouteInformation": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "CTeId": 0,
+          "StateCode": "string",
+          "RouteStateOrder": 0
+        }
+      ],
+      "CargoFlow": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "CTeId": 0,
+          "OriginCode": "string",
+          "DestinyCode": "string",
+          "RouteCode": "string",
+          "CrossingPoints": [
+            {
+              "_expandables": [
+                "string"
+              ],
+              "CompanyId": 0,
+              "CTeId": 0,
+              "CrossingPointSequentialId": 0,
+              "CrossingPointCode": "string"
+            }
+          ]
+        }
+      ],
+      "FreightPaymentInformation": [
+        {
+          "_expandables": [
+            "string"
+          ],
+          "CompanyId": 0,
+          "CTeId": 0,
+          "BankCode": "string",
+          "AgencyCode": "string",
+          "EletronicPaymentInstitutionCNPJ": "string",
+          "FreightPaymentResponsibleType": "string",
+          "FreightPaymentSequentialId": 0,
+          "FreightPaymentResponsibleName": "string",
+          "FreightPaymentResponsibleId": "string",
+          "ContractValue": 0,
+          "PaymentFormIndicator": 0,
+          "Components": [
+            {
+              "_expandables": [
+                "string"
+              ],
+              "CompanyId": 0,
+              "CTeId": 0,
+              "FreightPaymentSequentialId": 0,
+              "FreightComponentSequentialId": 0,
+              "Type": "string",
+              "Value": 0,
+              "OtherComponentDescription": "string"
+            }
+          ],
+          "InstallmentPayment": [
+            {
+              "_expandables": [
+                "string"
+              ],
+              "CompanyId": 0,
+              "CTeId": 0,
+              "FreightPaymentSequentialId": 0,
+              "FreightInstallmentPaymentSequentialId": 0,
+              "PlotNumber": 0,
+              "PlotDueDate": "2026-04-15T16:30:53Z",
+              "PlotValue": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

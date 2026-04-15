@@ -1474,14 +1474,8 @@
         "valorTotal": 210.96
       }
     ],
-    "status": "processada",
-    "ordemCompraId": "000001675",
-    "dataRecebimento": "2026-04-13",
-    "avaliacao": {
-      "qualidade": "1",
-      "pontualidade": "1",
-      "masso": "1"
-    }
+    "status": "pendente",
+    "ordemCompraId": "000001675"
   },
   {
     "id": "7839",
@@ -6618,14 +6612,8 @@
         "valorTotal": 10.5
       }
     ],
-    "status": "processada",
-    "ordemCompraId": "000001410",
-    "dataRecebimento": "2026-04-13",
-    "avaliacao": {
-      "qualidade": "1",
-      "pontualidade": "1",
-      "masso": "1"
-    }
+    "status": "pendente",
+    "ordemCompraId": "000001410"
   },
   {
     "id": "7313",

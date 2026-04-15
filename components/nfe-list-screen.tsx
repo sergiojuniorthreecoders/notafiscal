@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -11,27 +11,32 @@ import { useConfig } from "@/lib/config-context"
 import { fetchNFes } from "@/lib/api-service"
 import type { NotaFiscal } from "@/lib/types"
 
+const PAGE_SIZE = 10
+
 interface NFeListScreenProps {
   onNFeSelect: (nfe: NotaFiscal) => void
 }
 
 export function NFeListScreen({ onNFeSelect }: NFeListScreenProps) {
   const { config } = useConfig()
-  const [nfes, setNfes] = useState<NotaFiscal[]>([])
+  const [allNfes, setAllNfes] = useState<NotaFiscal[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [showFilters, setShowFilters] = useState(false)
   const [filterDate, setFilterDate] = useState("")
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
   const loadNFes = async () => {
     setIsLoading(true)
+    setVisibleCount(PAGE_SIZE)
     try {
       const filters: { numero?: string; dataInicio?: string } = {}
       if (searchTerm) filters.numero = searchTerm
       if (filterDate) filters.dataInicio = filterDate
 
       const data = await fetchNFes(config, filters, true)
-      setNfes(data)
+      setAllNfes(data)
     } catch (error) {
       console.error("Erro ao carregar NF-es:", error)
     } finally {
@@ -43,10 +48,41 @@ export function NFeListScreen({ onNFeSelect }: NFeListScreenProps) {
     loadNFes()
   }, [])
 
+  // Infinite scroll: quando o sentinel fica visível, carrega mais
+  useEffect(() => {
+    const el = sentinelRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((prev) => prev + PAGE_SIZE)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [isLoading])
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     loadNFes()
   }
+
+  const handleApplyFilters = () => {
+    loadNFes()
+  }
+
+  const handleClearFilters = () => {
+    setFilterDate("")
+    setSearchTerm("")
+    setVisibleCount(PAGE_SIZE)
+  }
+
+  const nfes = allNfes.slice(0, visibleCount)
+  const hasMore = visibleCount < allNfes.length
 
   const getStatusBadge = (status: NotaFiscal["status"]) => {
     switch (status) {
@@ -63,16 +99,11 @@ export function NFeListScreen({ onNFeSelect }: NFeListScreenProps) {
     }
   }
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value)
-  }
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("pt-BR")
-  }
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("pt-BR")
 
   return (
     <div className="flex flex-col gap-4 p-4 pb-24">
@@ -81,7 +112,7 @@ export function NFeListScreen({ onNFeSelect }: NFeListScreenProps) {
         <div>
           <h2 className="text-xl font-bold">Notas Fiscais</h2>
           <p className="text-sm text-muted-foreground">
-            {nfes.length} nota{nfes.length !== 1 ? "s" : ""} encontrada{nfes.length !== 1 ? "s" : ""}
+            {allNfes.length} nota{allNfes.length !== 1 ? "s" : ""} encontrada{allNfes.length !== 1 ? "s" : ""}
           </p>
         </div>
         <Button variant="outline" size="icon" onClick={loadNFes} disabled={isLoading}>
@@ -126,17 +157,10 @@ export function NFeListScreen({ onNFeSelect }: NFeListScreenProps) {
                 />
               </div>
               <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => {
-                    setFilterDate("")
-                    setSearchTerm("")
-                  }}
-                >
+                <Button variant="outline" className="flex-1" onClick={handleClearFilters}>
                   Limpar
                 </Button>
-                <Button className="flex-1" onClick={loadNFes}>
+                <Button className="flex-1" onClick={handleApplyFilters}>
                   Aplicar
                 </Button>
               </div>
@@ -150,7 +174,7 @@ export function NFeListScreen({ onNFeSelect }: NFeListScreenProps) {
         <div className="flex items-center justify-center py-12">
           <Spinner className="h-8 w-8" />
         </div>
-      ) : nfes.length === 0 ? (
+      ) : allNfes.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <FileText className="h-12 w-12 text-muted-foreground/50 mb-4" />
           <p className="text-muted-foreground">Nenhuma NF-e encontrada</p>
@@ -190,6 +214,19 @@ export function NFeListScreen({ onNFeSelect }: NFeListScreenProps) {
               </CardContent>
             </Card>
           ))}
+
+          {/* Sentinel para infinite scroll */}
+          {hasMore && (
+            <div ref={sentinelRef} className="flex items-center justify-center py-4">
+              <Spinner className="h-5 w-5 text-muted-foreground" />
+            </div>
+          )}
+
+          {!hasMore && allNfes.length > PAGE_SIZE && (
+            <p className="text-center text-xs text-muted-foreground py-2">
+              Mostrando todas as {allNfes.length} notas
+            </p>
+          )}
         </div>
       )}
     </div>

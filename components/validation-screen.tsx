@@ -36,6 +36,9 @@ import {
 } from "lucide-react"
 import { useConfig } from "@/lib/config-context"
 import { fetchOCByNFe, registrarEntradaNFe, addToHistorico, updateNFeStatus, updateOCItems } from "@/lib/api-service"
+import axios from "axios"
+import { buscarMovimento } from "@/lib/totvs-api"
+import type { TotvsMovimento } from "@/lib/totvs-api"
 import type { NotaFiscal, OrdemCompra } from "@/lib/types"
 
 interface ValidationScreenProps {
@@ -47,6 +50,8 @@ interface ValidationScreenProps {
 export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenProps) {
   const { config } = useConfig()
   const [oc, setOC] = useState<OrdemCompra | null>(null)
+  const [movimentoTotvs, setMovimentoTotvs] = useState<TotvsMovimento | null>(null)
+  const [movimentoTotvsErro, setMovimentoTotvsErro] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
@@ -78,6 +83,25 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
           initial[item.id] = restante
         }
         setItemQuantities(initial)
+
+        // Busca o movimento no TOTVS usando CODCOLIGADA|IDMOV
+        if (data.codColigada && data.id) {
+          const internalId = `${data.codColigada}|${data.id}`
+          try {
+            const movimento = await buscarMovimento(internalId)
+            setMovimentoTotvs(movimento)
+            setMovimentoTotvsErro(null)
+          } catch (err) {
+            console.error("[TOTVS] Erro ao buscar movimento:", internalId, err)
+            if (axios.isAxiosError(err)) {
+              const data = err.response?.data
+              const mensagem = data?.detailedMessage || data?.message || err.message
+              setMovimentoTotvsErro(mensagem.trim())
+            } else {
+              setMovimentoTotvsErro("Erro ao buscar movimentação no TOTVS.")
+            }
+          }
+        }
       }
     } catch (error) {
       console.error("Erro ao carregar OC:", error)
@@ -444,7 +468,7 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
               <Button
                 className="flex-1 h-14 text-lg font-semibold"
                 onClick={() => setShowConfirmDialog(true)}
-                disabled={isSubmitting || !avaliacaoPreenchida || !oc}
+                disabled={isSubmitting || !avaliacaoPreenchida || !oc || !movimentoTotvs}
               >
                 {isSubmitting ? (
                   <>
@@ -466,7 +490,17 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
             Vincule uma OC para habilitar as ações
           </p>
         )}
-        {!isReadOnly && oc && !avaliacaoPreenchida && (
+        {!isReadOnly && oc && !movimentoTotvs && movimentoTotvsErro && (
+          <p className="text-center text-xs text-destructive mt-2">
+            TOTVS: {movimentoTotvsErro}
+          </p>
+        )}
+        {!isReadOnly && oc && !movimentoTotvs && !movimentoTotvsErro && (
+          <p className="text-center text-xs text-destructive mt-2">
+            Aguardando movimentação do TOTVS...
+          </p>
+        )}
+        {!isReadOnly && oc && movimentoTotvs && !avaliacaoPreenchida && (
           <p className="text-center text-xs text-muted-foreground mt-2">
             Preencha todas as avaliações para confirmar a entrada
           </p>

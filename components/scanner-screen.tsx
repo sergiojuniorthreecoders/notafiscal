@@ -220,8 +220,8 @@ export function ScannerScreen({ onNFeFound }: ScannerScreenProps) {
 
       <style jsx>{`
         @keyframes scan {
-          0%, 100% { transform: translateY(-40px); }
-          50% { transform: translateY(40px); }
+          0%, 100% { transform: translateY(-20px); }
+          50% { transform: translateY(110px); }
         }
         .animate-scan {
           animation: scan 1.5s ease-in-out infinite;

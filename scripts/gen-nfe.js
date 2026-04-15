@@ -83,6 +83,7 @@ const ocObjects = new Map()
 for (let r = 1; r < ocRows.length; r++) {
   const row = ocRows[r]
   if (row.length < 10) continue
+  const codColigada = (row[0] || "").trim()
   const idmov = row[ocIdx["IDMOV"]] || ""
   const numeromov = (row[ocIdx["NUMEROMOV"]] || "").trim()
   const nomefantasia = row[ocIdx["NOMEFANTASIA"]] || ""
@@ -108,7 +109,7 @@ for (let r = 1; r < ocRows.length; r++) {
   } else {
     const isPlaceholder = !dataSaida || dataSaida.includes("1900")
     const dataPrevisao = isPlaceholder ? dataEmissao : toISO(dataSaida)
-    ocObjects.set(idmov, { id: idmov, numero: numeromov, fornecedor: { cnpj: "", razaoSocial: nomefantasia }, dataEmissao, dataPrevisao, status: ocStatus(statusnome), itens: [item], valorTotal: valLiqOrig })
+    ocObjects.set(idmov, { id: idmov, codColigada, numero: numeromov, fornecedor: { cnpj: "", razaoSocial: nomefantasia }, dataEmissao, dataPrevisao, status: ocStatus(statusnome), itens: [item], valorTotal: valLiqOrig })
   }
   if (!ocMap.has(numeromov)) ocMap.set(numeromov, ocStatus(statusnome))
 }

@@ -54,6 +54,7 @@ export interface OCItem {
 
 export interface OrdemCompra {
   id: string
+  codColigada?: string
   numero: string
   fornecedor: {
     cnpj: string

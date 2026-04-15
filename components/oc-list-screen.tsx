@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -18,27 +18,32 @@ import { useConfig } from "@/lib/config-context"
 import { fetchOCs } from "@/lib/api-service"
 import type { OrdemCompra } from "@/lib/types"
 
+const PAGE_SIZE = 10
+
 interface OCListScreenProps {
   onOCSelect?: (oc: OrdemCompra) => void
 }
 
 export function OCListScreen({ onOCSelect }: OCListScreenProps) {
   const { config } = useConfig()
-  const [ocs, setOCs] = useState<OrdemCompra[]>([])
+  const [allOCs, setAllOCs] = useState<OrdemCompra[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("todas")
   const [selectedOC, setSelectedOC] = useState<OrdemCompra | null>(null)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
-  const loadOCs = async () => {
+  const loadOCs = async (status = statusFilter) => {
     setIsLoading(true)
+    setVisibleCount(PAGE_SIZE)
     try {
       const filters: { numero?: string; status?: string } = {}
       if (searchTerm) filters.numero = searchTerm
-      if (statusFilter !== "todas") filters.status = statusFilter
+      if (status !== "todas") filters.status = status
 
       const data = await fetchOCs(config, filters, true)
-      setOCs(data)
+      setAllOCs(data)
     } catch (error) {
       console.error("Erro ao carregar OCs:", error)
     } finally {
@@ -50,10 +55,36 @@ export function OCListScreen({ onOCSelect }: OCListScreenProps) {
     loadOCs()
   }, [statusFilter])
 
+  // Infinite scroll
+  useEffect(() => {
+    const el = sentinelRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((prev) => prev + PAGE_SIZE)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [isLoading])
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     loadOCs()
   }
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value)
+    setVisibleCount(PAGE_SIZE)
+  }
+
+  const ocs = allOCs.slice(0, visibleCount)
+  const hasMore = visibleCount < allOCs.length
 
   const getStatusBadge = (status: OrdemCompra["status"]) => {
     switch (status) {
@@ -70,16 +101,11 @@ export function OCListScreen({ onOCSelect }: OCListScreenProps) {
     }
   }
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value)
-  }
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("pt-BR")
-  }
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("pt-BR")
 
   const handleOCClick = (oc: OrdemCompra) => {
     if (onOCSelect) {
@@ -96,10 +122,10 @@ export function OCListScreen({ onOCSelect }: OCListScreenProps) {
         <div>
           <h2 className="text-xl font-bold">Ordens de Compra</h2>
           <p className="text-sm text-muted-foreground">
-            {ocs.length} ordem{ocs.length !== 1 ? "ns" : ""} encontrada{ocs.length !== 1 ? "s" : ""}
+            {allOCs.length} ordem{allOCs.length !== 1 ? "ns" : ""} encontrada{allOCs.length !== 1 ? "s" : ""}
           </p>
         </div>
-        <Button variant="outline" size="icon" onClick={loadOCs} disabled={isLoading}>
+        <Button variant="outline" size="icon" onClick={() => loadOCs()} disabled={isLoading}>
           <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
         </Button>
       </div>
@@ -115,7 +141,7 @@ export function OCListScreen({ onOCSelect }: OCListScreenProps) {
             className="h-12 pl-10"
           />
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <Select value={statusFilter} onValueChange={handleStatusChange}>
           <SelectTrigger className="h-12 w-32">
             <SelectValue />
           </SelectTrigger>
@@ -134,7 +160,7 @@ export function OCListScreen({ onOCSelect }: OCListScreenProps) {
         <div className="flex items-center justify-center py-12">
           <Spinner className="h-8 w-8" />
         </div>
-      ) : ocs.length === 0 ? (
+      ) : allOCs.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <ShoppingCart className="h-12 w-12 text-muted-foreground/50 mb-4" />
           <p className="text-muted-foreground">Nenhuma OC encontrada</p>
@@ -211,6 +237,19 @@ export function OCListScreen({ onOCSelect }: OCListScreenProps) {
               </CardContent>
             </Card>
           ))}
+
+          {/* Sentinel para infinite scroll */}
+          {hasMore && (
+            <div ref={sentinelRef} className="flex items-center justify-center py-4">
+              <Spinner className="h-5 w-5 text-muted-foreground" />
+            </div>
+          )}
+
+          {!hasMore && allOCs.length > PAGE_SIZE && (
+            <p className="text-center text-xs text-muted-foreground py-2">
+              Mostrando todas as {allOCs.length} ordens
+            </p>
+          )}
         </div>
       )}
     </div>
