@@ -1,6 +1,16 @@
 [
   {
     "tipo": "entrada",
+    "notaFiscalId": "7483",
+    "notaFiscalNumero": "77744",
+    "fornecedor": "CALDEX CONEXOES E EQUIPAMENTOS LTDA.",
+    "dataHora": "2026-04-16T13:21:28.199Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776345688251"
+  },
+  {
+    "tipo": "entrada",
     "notaFiscalId": "7421",
     "notaFiscalNumero": "91517",
     "fornecedor": "ALPHA MARKTEC MATERIAIS ELETRICOS LTDA",

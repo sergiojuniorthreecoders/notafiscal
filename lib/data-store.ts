@@ -40,7 +40,7 @@ export function getNFes(): NotaFiscal[] {
     // Deriva status inicial da NF-e a partir da OC vinculada
     const data = nfes.map((nfe) => {
       if (!nfe.ordemCompraId) return { ...nfe, status: "pendente" as const }
-      const oc = ocs.find((o) => o.numero === nfe.ordemCompraId)
+      const oc = nfe.ordemCompraId ? getOCByNumero(nfe.ordemCompraId) : null
       if (!oc) return { ...nfe, status: "pendente" as const }
       // OC totalmente recebida → NF-e já conciliada
       const status = oc.status === "fechada" ? "processada" as const : "pendente" as const
@@ -81,10 +81,13 @@ export function getOCs(): OrdemCompra[] {
   return readJSON<OrdemCompra[]>(OC_FILE, [])
 }
 
+function normalizeNumero(n: string): string {
+  return /^\d+$/.test(n) ? n.padStart(9, "0") : n
+}
+
 export function getOCByNumero(numero: string): OrdemCompra | null {
-  // Normaliza para 9 dígitos antes de comparar
-  const normalized = /^\d+$/.test(numero) ? numero.padStart(9, "0") : numero
-  return getOCs().find((o) => o.numero === normalized || o.numero === numero) ?? null
+  const normalized = normalizeNumero(numero)
+  return getOCs().find((o) => normalizeNumero(o.numero) === normalized) ?? null
 }
 
 export function getOCById(id: string): OrdemCompra | null {

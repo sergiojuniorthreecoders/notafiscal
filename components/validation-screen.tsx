@@ -37,7 +37,7 @@ import {
 import { useConfig } from "@/lib/config-context"
 import { fetchOCByNFe, registrarEntradaNFe, addToHistorico, updateNFeStatus, updateOCItems } from "@/lib/api-service"
 import axios from "axios"
-import { buscarMovimento } from "@/lib/totvs-api"
+import { construirPayloadEntrada } from "@/lib/totvs-api"
 import type { TotvsMovimento } from "@/lib/totvs-api"
 import type { NotaFiscal, OrdemCompra } from "@/lib/types"
 
@@ -84,22 +84,22 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         }
         setItemQuantities(initial)
 
-        // Busca o movimento no TOTVS usando CODCOLIGADA|IDMOV
+        // Busca o movimento no TOTVS via API route (server-side, evita encoding do | pelo browser)
         if (data.codColigada && data.id) {
           const internalId = `${data.codColigada}|${data.id}`
           try {
-            const movimento = await buscarMovimento(internalId)
-            setMovimentoTotvs(movimento)
-            setMovimentoTotvsErro(null)
-          } catch (err) {
-            console.error("[TOTVS] Erro ao buscar movimento:", internalId, err)
-            if (axios.isAxiosError(err)) {
-              const data = err.response?.data
-              const mensagem = data?.detailedMessage || data?.message || err.message
+            const res = await fetch(`/api/totvs/movimento?internalId=${encodeURIComponent(internalId)}`)
+            const json = await res.json()
+            if (!res.ok) {
+              const mensagem = json?.message || json?.detailedMessage || "Erro ao buscar movimentação no TOTVS."
               setMovimentoTotvsErro(mensagem.trim())
             } else {
-              setMovimentoTotvsErro("Erro ao buscar movimentação no TOTVS.")
+              setMovimentoTotvs(json as TotvsMovimento)
+              setMovimentoTotvsErro(null)
             }
+          } catch (err) {
+            console.error("[TOTVS] Erro ao buscar movimento:", internalId, err)
+            setMovimentoTotvsErro("Erro ao buscar movimentação no TOTVS.")
           }
         }
       }
@@ -120,6 +120,25 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
     setIsSubmitting(true)
 
     try {
+      // Envia o movimento de entrada no TOTVS via API route (server-side)
+      if (movimentoTotvs) {
+        const payload = construirPayloadEntrada(
+          movimentoTotvs,
+          itemQuantities,
+          { qualidade: avaliacaoQualidade, pontualidade: avaliacaoPontualidade, masso: avaliacaoMASSO }
+        )
+        const res = await fetch("/api/totvs/movimento", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+        if (!res.ok) {
+          const json = await res.json()
+          const mensagem = json?.message || json?.detailedMessage || "Erro ao registrar movimento no TOTVS."
+          throw new Error(mensagem)
+        }
+      }
+
       const response = await registrarEntradaNFe(nfe.id, config, true)
 
       if (response.success) {
@@ -165,8 +184,13 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
       if (response.success) {
         setTimeout(() => onComplete(), 2000)
       }
-    } catch {
-      setResult({ success: false, message: "Erro inesperado ao processar entrada" })
+    } catch (err) {
+      let mensagem = "Erro inesperado ao processar entrada"
+      if (axios.isAxiosError(err)) {
+        const data = err.response?.data
+        mensagem = data?.message || data?.detailedMessage || err.message
+      }
+      setResult({ success: false, message: mensagem })
     } finally {
       setIsSubmitting(false)
     }

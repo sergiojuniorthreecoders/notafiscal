@@ -44,9 +44,9 @@ function block(xml, t) {
 
 function normalizeXped(xped) {
   if (!xped || xped === "0") return undefined
-  const clean = xped.trim()
-  if (/^\d+$/.test(clean)) return clean.padStart(9, "0")
-  return undefined
+  const clean = xped.trim().replace(/^0+/, "")
+  if (!clean || !/^\d+$/.test(clean)) return undefined
+  return clean
 }
 
 function ocStatus(s) {
