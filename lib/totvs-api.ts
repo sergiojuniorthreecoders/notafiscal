@@ -136,6 +136,8 @@ export function construirPayloadEntrada(
     movementId: 0,
     integrationId: "",
     movementTypeCode: "1.1.20",
+    number: "0",
+    series: "",
     complementaryFields: {
       MOV_QUALI: avaliacao.qualidade,
       MOV_PONT_PRD: avaliacao.pontualidade,

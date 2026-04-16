@@ -1,6 +1,16 @@
 [
   {
     "tipo": "entrada",
+    "notaFiscalId": "7156",
+    "notaFiscalNumero": "3323",
+    "fornecedor": "A L SEQUEIRA COMERCIO DE FERRAMENTAS LTDA",
+    "dataHora": "2026-04-16T20:10:16.293Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776370216344"
+  },
+  {
+    "tipo": "entrada",
     "notaFiscalId": "7087",
     "notaFiscalNumero": "24857",
     "fornecedor": "BRASCLEAN ACESSORIOS E PRODUTOS DE LIMPE",

@@ -4422,14 +4422,14 @@
     },
     "dataEmissao": "2026-01-22T00:00:00-03:00",
     "dataPrevisao": "2026-01-22T00:00:00-03:00",
-    "status": "aberta",
+    "status": "fechada",
     "itens": [
       {
         "id": "12692-item-1",
         "codigo": "104339",
         "descricao": "",
         "quantidadeEsperada": 50,
-        "quantidadeRecebida": 0,
+        "quantidadeRecebida": 50,
         "unidade": "UN",
         "valorUnitario": 0.3887
       },
@@ -4438,7 +4438,7 @@
         "codigo": "104361",
         "descricao": "",
         "quantidadeEsperada": 50,
-        "quantidadeRecebida": 0,
+        "quantidadeRecebida": 50,
         "unidade": "UN",
         "valorUnitario": 0.3887
       },
@@ -4447,7 +4447,7 @@
         "codigo": "84928",
         "descricao": "",
         "quantidadeEsperada": 1,
-        "quantidadeRecebida": 0,
+        "quantidadeRecebida": 1,
         "unidade": "UN",
         "valorUnitario": 19.435
       },
@@ -4456,7 +4456,7 @@
         "codigo": "92739",
         "descricao": "",
         "quantidadeEsperada": 100,
-        "quantidadeRecebida": 0,
+        "quantidadeRecebida": 100,
         "unidade": "UN",
         "valorUnitario": 0.19435
       },
@@ -4465,7 +4465,7 @@
         "codigo": "97721",
         "descricao": "",
         "quantidadeEsperada": 10,
-        "quantidadeRecebida": 0,
+        "quantidadeRecebida": 10,
         "unidade": "UN",
         "valorUnitario": 1.9434999999999998
       }
