@@ -28,6 +28,10 @@ export interface NotaFiscal {
     cnpj: string
     razaoSocial: string
   }
+  destinatario?: {
+    cnpj: string
+    razaoSocial: string
+  }
   dataEmissao: string
   dataRecebimento?: string
   valorTotal: number

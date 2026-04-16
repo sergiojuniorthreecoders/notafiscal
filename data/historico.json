@@ -1,6 +1,36 @@
 [
   {
     "tipo": "entrada",
+    "notaFiscalId": "7087",
+    "notaFiscalNumero": "24857",
+    "fornecedor": "BRASCLEAN ACESSORIOS E PRODUTOS DE LIMPE",
+    "dataHora": "2026-04-16T13:47:56.134Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776347276145"
+  },
+  {
+    "tipo": "entrada",
+    "notaFiscalId": "7157",
+    "notaFiscalNumero": "174848",
+    "fornecedor": "TECNOFERRAMENTAS COMERCIAL, IMPORTACAO E EXPORTACAO LTDA",
+    "dataHora": "2026-04-16T13:33:59.898Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776346439918"
+  },
+  {
+    "tipo": "entrada",
+    "notaFiscalId": "7265",
+    "notaFiscalNumero": "91433",
+    "fornecedor": "MOTTA SOLUCOES TUBULARES LTDA",
+    "dataHora": "2026-04-16T13:32:50.643Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776346370651"
+  },
+  {
+    "tipo": "entrada",
     "notaFiscalId": "7483",
     "notaFiscalNumero": "77744",
     "fornecedor": "CALDEX CONEXOES E EQUIPAMENTOS LTDA.",

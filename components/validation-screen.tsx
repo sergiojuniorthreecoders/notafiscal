@@ -56,7 +56,15 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [showRejectDialog, setShowRejectDialog] = useState(false)
-  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null)
+  const [result, setResult] = useState<{
+    success: boolean
+    message: string
+    internalId?: string
+    companyId?: number
+    movementId?: number
+    branchId?: number
+    movementTypeCode?: string
+  } | null>(null)
   // itemQuantities: quantidade que será recebida agora para cada item da OC (chave = ocItem.id)
   const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({})
   const [avaliacaoQualidade, setAvaliacaoQualidade] = useState<string>(nfe.avaliacao?.qualidade ?? "")
@@ -121,6 +129,8 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
 
     try {
       // Envia o movimento de entrada no TOTVS via API route (server-side)
+      let totvsInternalId: string | undefined
+      let totvsData: { companyId?: number; movementId?: number; branchId?: number; movementTypeCode?: string } = {}
       if (movimentoTotvs) {
         const payload = construirPayloadEntrada(
           movimentoTotvs,
@@ -137,6 +147,14 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
           const mensagem = json?.message || json?.detailedMessage || "Erro ao registrar movimento no TOTVS."
           throw new Error(mensagem)
         }
+        const totvsJson = await res.json()
+        totvsInternalId = totvsJson?.internalId ?? totvsJson?.InternalId
+        Object.assign(totvsData, {
+          companyId: totvsJson?.companyId ?? totvsJson?.CompanyId,
+          movementId: totvsJson?.movementId ?? totvsJson?.MovementId,
+          branchId: totvsJson?.branchId ?? totvsJson?.BranchId,
+          movementTypeCode: totvsJson?.movementTypeCode ?? totvsJson?.MovementTypeCode,
+        })
       }
 
       const response = await registrarEntradaNFe(nfe.id, config, true)
@@ -169,7 +187,7 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         }
       }
 
-      setResult(response)
+      setResult({ ...response, internalId: totvsInternalId, ...totvsData })
 
       await addToHistorico({
         tipo: response.success ? "entrada" : "erro",
@@ -182,7 +200,7 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
       })
 
       if (response.success) {
-        setTimeout(() => onComplete(), 2000)
+        // usuário fecha manualmente
       }
     } catch (err) {
       let mensagem = "Erro inesperado ao processar entrada"
@@ -246,9 +264,28 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         }`}>
           {result.success ? "Entrada Registrada!" : "Falha no Registro"}
         </h2>
-        <p className="text-center text-muted-foreground mb-6">{result.message}</p>
+        <p className="text-center text-muted-foreground mb-4">{result.message}</p>
+        {result.success && result.movementId && (
+          <div className="w-full rounded-xl border bg-muted/50 p-4 mb-6 space-y-2">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">Movimento gerado no TOTVS</p>
+            {[
+              { label: "Coligada", value: result.companyId },
+              { label: "Movimento", value: result.movementId },
+              { label: "Filial", value: result.branchId },
+              { label: "Tipo Movimento", value: result.movementTypeCode },
+              { label: "Status", value: "Pendente" },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex justify-between text-sm">
+                <span className="text-muted-foreground">{label}</span>
+                <span className="font-semibold font-mono">{value}</span>
+              </div>
+            ))}
+          </div>
+        )}
         {result.success ? (
-          <p className="text-sm text-muted-foreground">Retornando ao scanner...</p>
+          <Button onClick={onComplete} className="h-12 px-8">
+            Concluir
+          </Button>
         ) : (
           <Button onClick={() => setResult(null)} className="h-12 px-8">
             Tentar Novamente
@@ -294,9 +331,25 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         </CardHeader>
         <CardContent className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Fornecedor</span>
-            <span className="font-medium">{nfe.fornecedor.razaoSocial}</span>
+            <span className="text-muted-foreground">Vendedor</span>
+            <span className="font-medium text-right max-w-[60%]">{nfe.fornecedor.razaoSocial}</span>
           </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">CNPJ Vendedor</span>
+            <span className="font-mono text-sm">{nfe.fornecedor.cnpj}</span>
+          </div>
+          {nfe.destinatario && (
+            <>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Tomador</span>
+                <span className="font-medium text-right max-w-[60%]">{nfe.destinatario.razaoSocial}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">CNPJ Tomador</span>
+                <span className="font-mono text-sm">{nfe.destinatario.cnpj}</span>
+              </div>
+            </>
+          )}
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Data Emissão</span>
             <span className="font-medium">{formatDate(nfe.dataEmissao)}</span>

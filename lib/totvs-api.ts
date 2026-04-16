@@ -114,20 +114,22 @@ export function construirPayloadEntrada(
   const zerarRateiosItem = (rateios: TotvsRateioItem[]) =>
     rateios.map((r) => ({ ...r, apportionmentId: 0, movementId: 0 }))
 
-  const itens = movimento.movementItems.map((item) => {
-    // Mapeia a quantidade usando o padrão "idmov-item-sequentialId"
-    const ocItemId = `${movimento.movementId}-item-${item.sequentialId}`
-    const quantidade = itemQuantities[ocItemId] ?? item.quantity
-
-    return {
+  const itens = movimento.movementItems
+    .map((item) => {
+      // Mapeia a quantidade usando o padrão "idmov-item-sequentialId"
+      const ocItemId = `${movimento.movementId}-item-${item.sequentialId}`
+      const quantidade = itemQuantities[ocItemId] ?? item.quantity
+      return { item, quantidade }
+    })
+    .filter(({ quantidade }) => quantidade > 0)
+    .map(({ item, quantidade }) => ({
       ...item,
       movementId: 0,
       quantity: quantidade,
       originalQuantity: quantidade,
       receivableQuantity: quantidade,
       costCenterApportionments: zerarRateiosItem(item.costCenterApportionments ?? []),
-    }
-  })
+    }))
 
   return {
     ...movimento,

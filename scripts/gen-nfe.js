@@ -139,6 +139,9 @@ for (let r = 1; r < nfeRows.length; r++) {
   const emitBlk = block(xml, "emit")
   const cnpj = formatCNPJ(tag(emitBlk, "CNPJ"))
   const razaoSocial = tag(emitBlk, "xNome")
+  const destBlk = block(xml, "dest")
+  const cnpjDestinatario = formatCNPJ(tag(destBlk, "CNPJ") || tag(destBlk, "CPF"))
+  const razaoSocialDestinatario = tag(destBlk, "xNome")
   const serie = tag(block(xml, "ide"), "serie")
   const totBlk = block(xml, "ICMSTot")
   const valorTotal = num(tag(totBlk, "vNF") || tag(xml, "vNFTot"))
@@ -169,7 +172,7 @@ for (let r = 1; r < nfeRows.length; r++) {
 
   const ocSt = ordemCompraId ? (ocMap.get(ordemCompraId) || null) : null
   const status = ocSt === "fechada" ? "processada" : "pendente"
-  nfes.push({ id, numero, serie, chaveAcesso, fornecedor: { cnpj, razaoSocial }, dataEmissao, valorTotal, itens, status, ordemCompraId })
+  nfes.push({ id, numero, serie, chaveAcesso, fornecedor: { cnpj, razaoSocial }, destinatario: { cnpj: cnpjDestinatario, razaoSocial: razaoSocialDestinatario }, dataEmissao, valorTotal, itens, status, ordemCompraId })
 }
 
 // (sem patches manuais de status — usar dados reais do CSV)
