@@ -129,6 +129,8 @@ export function construirPayloadEntrada(
       originalQuantity: quantidade,
       receivableQuantity: quantidade,
       costCenterApportionments: zerarRateiosItem(item.costCenterApportionments ?? []),
+      itemLots: [],
+      ItemLots: [],
     }))
 
   return {

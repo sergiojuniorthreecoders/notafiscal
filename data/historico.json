@@ -1,6 +1,26 @@
 [
   {
     "tipo": "entrada",
+    "notaFiscalId": "7111",
+    "notaFiscalNumero": "1441269",
+    "fornecedor": "FERRAMENTAS GERAIS COMERCIO IMP DE FERRAM. E MAQUINAS LTDA",
+    "dataHora": "2026-04-16T20:17:20.222Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776370640230"
+  },
+  {
+    "tipo": "entrada",
+    "notaFiscalId": "7464",
+    "notaFiscalNumero": "140552",
+    "fornecedor": "GERDAU AÇOS LONGOS S/A",
+    "dataHora": "2026-04-16T20:15:29.295Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776370529306"
+  },
+  {
+    "tipo": "entrada",
     "notaFiscalId": "7156",
     "notaFiscalNumero": "3323",
     "fornecedor": "A L SEQUEIRA COMERCIO DE FERRAMENTAS LTDA",
