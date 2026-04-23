@@ -7,7 +7,8 @@ export async function fetchNFeByChave(
   _config?: APIConfig,
   _useMock?: boolean
 ): Promise<NotaFiscal | null> {
-  const res = await fetch(`/api/nfe?chave=${encodeURIComponent(chaveAcesso)}`)
+  // Busca NF-e diretamente na API TOTVS (HD052)
+  const res = await fetch(`/api/totvs/nfe?chave=${encodeURIComponent(chaveAcesso)}`)
   if (!res.ok) return null
   return res.json()
 }
@@ -54,6 +55,20 @@ export async function fetchOCByNFe(
 ): Promise<OrdemCompra | null> {
   if (!ordemCompraNumero) return null
   const res = await fetch(`/api/oc?numero=${encodeURIComponent(ordemCompraNumero)}`)
+  if (!res.ok) return null
+  return res.json()
+}
+
+// Busca OC diretamente na API TOTVS (HD053)
+export async function fetchOCFromTotvs(
+  codColigada: string,
+  codFilial: string,
+  numeromov: string
+): Promise<OrdemCompra | null> {
+  if (!codColigada || !codFilial || !numeromov) return null
+  const res = await fetch(
+    `/api/totvs/oc?codColigada=${encodeURIComponent(codColigada)}&codFilial=${encodeURIComponent(codFilial)}&numeromov=${encodeURIComponent(numeromov)}`
+  )
   if (!res.ok) return null
   return res.json()
 }

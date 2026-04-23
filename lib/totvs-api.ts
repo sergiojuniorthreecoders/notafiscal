@@ -104,49 +104,124 @@ export interface AvaliacaoEntrada {
 export function construirPayloadEntrada(
   movimento: TotvsMovimento,
   itemQuantities: Record<string, number>, // chave = ocItem.id ("idmov-item-seq")
-  avaliacao: AvaliacaoEntrada
+  avaliacao: AvaliacaoEntrada,
+  nfeNumero: string,
+  nfeChaveAcesso: string
 ): TotvsInserirMovimentoPayload {
+  const ocMovementId = movimento.movementId
+  const ocCompanyId  = movimento.companyId
 
-  // Zera ApportionmentId em um array de rateios
-  const zerarRateios = (rateios: TotvsRateio[]) =>
-    rateios.map((r) => ({ ...r, apportionmentId: 0, movementId: 0 }))
-
-  const zerarRateiosItem = (rateios: TotvsRateioItem[]) =>
-    rateios.map((r) => ({ ...r, apportionmentId: 0, movementId: 0 }))
-
-  const itens = movimento.movementItems
-    .map((item) => {
-      // Mapeia a quantidade usando o padrão "idmov-item-sequentialId"
-      const ocItemId = `${movimento.movementId}-item-${item.sequentialId}`
+  const Items = movimento.movementItems
+    .map((item, idx) => {
+      const ocItemId = `${ocMovementId}-item-${item.sequentialId}`
       const quantidade = itemQuantities[ocItemId] ?? item.quantity
-      return { item, quantidade }
+      return { item, quantidade, idx }
     })
     .filter(({ quantidade }) => quantidade > 0)
-    .map(({ item, quantidade }) => ({
-      ...item,
-      movementId: 0,
-      quantity: quantidade,
-      originalQuantity: quantidade,
-      receivableQuantity: quantidade,
-      costCenterApportionments: zerarRateiosItem(item.costCenterApportionments ?? []),
-      itemLots: [],
+    .map(({ item, quantidade, idx }) => ({
+      CompanyId:             ocCompanyId,
+      MovementId:            0,
+      SequentialId:          idx + 1,
+      SequentialNumber:      idx + 1,
+      ProductId:             item.productId,
+      Quantity:              quantidade,
+      OriginalQuantity:      quantidade,
+      ReceivableQuantity:    quantidade,
+      UnitPrice:             item.unitPrice,
+      NetValue:              item.netValue,
+      GrossValue:            item.grossValue,
+      MeasureUnitCode:       item.measureUnitCode,
+      WarehouseCode:         item.warehouseCode,
+      BugdetNatureCode:      item.bugdetNatureCode,
+      BugdetNatureCompanyId: item.bugdetNatureCompanyId,
+      IsSubstituteProduct:   0,
+      AplicationIntegration: "M",
+      complementaryFields:   {},
+      CostCenterApportionments: (item.costCenterApportionments ?? []).map((r) => ({
+        CompanyId:                r.companyId,
+        MovementId:               0,
+        MovementItemSequentialId: 0,
+        ApportionmentId:          0,
+        CostCenterCode:           r.costCenterCode,
+        Percentage:               r.percentage,
+        Value:                    0,
+        ProjectId:                r.projectId,
+        TaskId:                   r.taskId,
+        ProjectCode:              r.projectCode,
+        TaskCode:                 r.taskCode,
+      })),
       ItemLots: [],
+      relatedItem: [
+        {
+          originMovementId:                ocMovementId,
+          originMovementItemSequentialId:  item.sequentialId,
+          originMovementCompanyId:         ocCompanyId,
+          destinyMovementId:               0,
+          destinyMovementItemSequentialId: 0,
+          destinyMovementCompanyId:        ocCompanyId,
+          quantity:                        quantidade,
+          receivedValue:                   0,
+          measureUnitCode:                 item.measureUnitCode,
+        },
+      ],
     }))
 
   return {
-    ...movimento,
-    movementId: 0,
-    integrationId: "",
-    movementTypeCode: "1.1.20",
-    number: "0",
-    series: "",
+    InternalId:              `${ocCompanyId}|0`,
+    CompanyId:               ocCompanyId,
+    MovementId:              0,
+    BranchId:                movimento.branchId,
+    WarehouseCode:           movimento.warehouseCode,
+    CustomerVendorCompanyId: movimento["customerVendorCompanyId"] ?? ocCompanyId,
+    CustomerVendorCode:      movimento.customerVendorCode,
+    Number:                  nfeNumero,
+    Series:                  "",
+    MovementTypeCode:        "1.1.20",
+    Status:                  movimento.status,
+    AplicationIntegration:   "T",
+    IntegrationId:           "",
+    NFeAccesskey:            nfeChaveAcesso,
+    RegisterDate:            movimento.registerDate,
+    DeliveryDate:            movimento.deliveryDate,
+    GrossValue:              movimento.grossValue,
+    NetValue:                movimento.netValue,
+    OtherValues:             movimento.otherValues,
+    FreightValue:            movimento.freightValue,
+    PaymentTermCode:         movimento.paymentTermCode,
+    UserCode:                movimento.userCode,
+    ShortHistory:            movimento.shortHistory,
+    RelatedMovementId:       ocMovementId,
+    UnfoldedOrderId:         ocMovementId,
     complementaryFields: {
-      MOV_QUALI: avaliacao.qualidade,
+      MOV_QUALI:    avaliacao.qualidade,
       MOV_PONT_PRD: avaliacao.pontualidade,
-      MOV_AVA_SMS: avaliacao.masso,
+      MOV_AVA_SMS:  avaliacao.masso,
     },
-    movementItems: itens,
-    costCenterApportionments: zerarRateios(movimento.costCenterApportionments ?? []),
+    movementItems: Items,
+    Payments: [],
+    CostCenterApportionments: (movimento.costCenterApportionments ?? []).map((r) => ({
+      CompanyId:       r.companyId,
+      MovementId:      0,
+      ApportionmentId: 0,
+      CostCenterCode:  r.costCenterCode,
+      Percentage:      r.percentage,
+      Value:           0,
+      ProjectId:       r.projectId,
+      TaskId:          r.taskId,
+      ProjectCode:     r.projectCode,
+      TaskCode:        r.taskCode,
+    })),
+    relatedMovement: [
+      {
+        originMovementId:  ocMovementId,
+        originCompanyId:   ocCompanyId,
+        destinyMovementId: 0,
+        destinyCompanyId:  ocCompanyId,
+        relationType:      "P",
+        processId:         0,
+        receivedValue:     0,
+      },
+    ],
   }
 }
 

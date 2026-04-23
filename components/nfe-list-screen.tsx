@@ -35,8 +35,8 @@ export function NFeListScreen({ onNFeSelect }: NFeListScreenProps) {
       if (searchTerm) filters.numero = searchTerm
       if (filterDate) filters.dataInicio = filterDate
 
-      const data = await fetchNFes(config, filters, true)
-      setAllNfes(data)
+      // Listagem via API TOTVS não disponível no momento
+      setAllNfes([])
     } catch (error) {
       console.error("Erro ao carregar NF-es:", error)
     } finally {

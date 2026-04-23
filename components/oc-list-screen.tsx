@@ -42,8 +42,8 @@ export function OCListScreen({ onOCSelect }: OCListScreenProps) {
       if (searchTerm) filters.numero = searchTerm
       if (status !== "todas") filters.status = status
 
-      const data = await fetchOCs(config, filters, true)
-      setAllOCs(data)
+      // Listagem via API TOTVS não disponível no momento
+      setAllOCs([])
     } catch (error) {
       console.error("Erro ao carregar OCs:", error)
     } finally {

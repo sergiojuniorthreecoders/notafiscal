@@ -1,92 +1,82 @@
 [
   {
     "tipo": "entrada",
-    "notaFiscalId": "7111",
-    "notaFiscalNumero": "1441269",
-    "fornecedor": "FERRAMENTAS GERAIS COMERCIO IMP DE FERRAM. E MAQUINAS LTDA",
-    "dataHora": "2026-04-16T20:17:20.222Z",
-    "status": "sucesso",
-    "mensagem": "Entrada registrada com sucesso",
-    "id": "hist-1776370640230"
-  },
-  {
-    "tipo": "entrada",
-    "notaFiscalId": "7464",
-    "notaFiscalNumero": "140552",
-    "fornecedor": "GERDAU AÇOS LONGOS S/A",
-    "dataHora": "2026-04-16T20:15:29.295Z",
-    "status": "sucesso",
-    "mensagem": "Entrada registrada com sucesso",
-    "id": "hist-1776370529306"
-  },
-  {
-    "tipo": "entrada",
-    "notaFiscalId": "7156",
-    "notaFiscalNumero": "3323",
-    "fornecedor": "A L SEQUEIRA COMERCIO DE FERRAMENTAS LTDA",
-    "dataHora": "2026-04-16T20:10:16.293Z",
-    "status": "sucesso",
-    "mensagem": "Entrada registrada com sucesso",
-    "id": "hist-1776370216344"
-  },
-  {
-    "tipo": "entrada",
-    "notaFiscalId": "7087",
-    "notaFiscalNumero": "24857",
-    "fornecedor": "BRASCLEAN ACESSORIOS E PRODUTOS DE LIMPE",
-    "dataHora": "2026-04-16T13:47:56.134Z",
-    "status": "sucesso",
-    "mensagem": "Entrada registrada com sucesso",
-    "id": "hist-1776347276145"
-  },
-  {
-    "tipo": "entrada",
-    "notaFiscalId": "7157",
-    "notaFiscalNumero": "174848",
-    "fornecedor": "TECNOFERRAMENTAS COMERCIAL, IMPORTACAO E EXPORTACAO LTDA",
-    "dataHora": "2026-04-16T13:33:59.898Z",
-    "status": "sucesso",
-    "mensagem": "Entrada registrada com sucesso",
-    "id": "hist-1776346439918"
-  },
-  {
-    "tipo": "entrada",
-    "notaFiscalId": "7265",
-    "notaFiscalNumero": "91433",
+    "notaFiscalId": "6852",
+    "notaFiscalNumero": "90719",
     "fornecedor": "MOTTA SOLUCOES TUBULARES LTDA",
-    "dataHora": "2026-04-16T13:32:50.643Z",
+    "dataHora": "2026-04-23T14:43:06.930Z",
     "status": "sucesso",
     "mensagem": "Entrada registrada com sucesso",
-    "id": "hist-1776346370651"
+    "id": "hist-1776955386948"
   },
   {
     "tipo": "entrada",
-    "notaFiscalId": "7483",
-    "notaFiscalNumero": "77744",
-    "fornecedor": "CALDEX CONEXOES E EQUIPAMENTOS LTDA.",
-    "dataHora": "2026-04-16T13:21:28.199Z",
+    "notaFiscalId": "6852",
+    "notaFiscalNumero": "90719",
+    "fornecedor": "MOTTA SOLUCOES TUBULARES LTDA",
+    "dataHora": "2026-04-23T13:28:47.081Z",
     "status": "sucesso",
     "mensagem": "Entrada registrada com sucesso",
-    "id": "hist-1776345688251"
+    "id": "hist-1776950927156"
   },
   {
     "tipo": "entrada",
-    "notaFiscalId": "7421",
-    "notaFiscalNumero": "91517",
-    "fornecedor": "ALPHA MARKTEC MATERIAIS ELETRICOS LTDA",
-    "dataHora": "2026-04-13T15:09:14.724Z",
+    "notaFiscalId": "6852",
+    "notaFiscalNumero": "90719",
+    "fornecedor": "MOTTA SOLUCOES TUBULARES LTDA",
+    "dataHora": "2026-04-22T20:26:43.467Z",
     "status": "sucesso",
     "mensagem": "Entrada registrada com sucesso",
-    "id": "hist-1776092954735"
+    "id": "hist-1776889603493"
   },
   {
     "tipo": "entrada",
-    "notaFiscalId": "7845",
-    "notaFiscalNumero": "25887",
-    "fornecedor": "BRASCLEAN ACESSORIOS E PRODUTOS DE LIMPE",
-    "dataHora": "2026-04-13T15:07:01.726Z",
+    "notaFiscalId": "6852",
+    "notaFiscalNumero": "90719",
+    "fornecedor": "MOTTA SOLUCOES TUBULARES LTDA",
+    "dataHora": "2026-04-22T20:06:03.933Z",
     "status": "sucesso",
     "mensagem": "Entrada registrada com sucesso",
-    "id": "hist-1776092821734"
+    "id": "hist-1776888363950"
+  },
+  {
+    "tipo": "entrada",
+    "notaFiscalId": "6852",
+    "notaFiscalNumero": "90719",
+    "fornecedor": "MOTTA SOLUCOES TUBULARES LTDA",
+    "dataHora": "2026-04-22T20:01:58.046Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776888118070"
+  },
+  {
+    "tipo": "entrada",
+    "notaFiscalId": "6852",
+    "notaFiscalNumero": "90719",
+    "fornecedor": "MOTTA SOLUCOES TUBULARES LTDA",
+    "dataHora": "2026-04-22T19:54:25.445Z",
+    "status": "sucesso",
+    "mensagem": "Entrada registrada com sucesso",
+    "id": "hist-1776887665460"
+  },
+  {
+    "tipo": "erro",
+    "notaFiscalId": "6852",
+    "notaFiscalNumero": "90719",
+    "fornecedor": "MOTTA SOLUCOES TUBULARES LTDA",
+    "dataHora": "2026-04-22T19:25:44.349Z",
+    "status": "erro",
+    "mensagem": "Falha ao registrar entrada",
+    "id": "hist-1776885944369"
+  },
+  {
+    "tipo": "erro",
+    "notaFiscalId": "6852",
+    "notaFiscalNumero": "90719",
+    "fornecedor": "MOTTA SOLUCOES TUBULARES LTDA",
+    "dataHora": "2026-04-22T18:32:51.695Z",
+    "status": "erro",
+    "mensagem": "Falha ao registrar entrada",
+    "id": "hist-1776882771753"
   }
 ]

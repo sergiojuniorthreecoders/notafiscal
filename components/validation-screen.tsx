@@ -34,9 +34,7 @@ import {
   CheckCircle2,
   XCircle,
 } from "lucide-react"
-import { useConfig } from "@/lib/config-context"
-import { fetchOCByNFe, registrarEntradaNFe, addToHistorico, updateNFeStatus, updateOCItems } from "@/lib/api-service"
-import axios from "axios"
+import { fetchOCFromTotvs, addToHistorico } from "@/lib/api-service"
 import { construirPayloadEntrada } from "@/lib/totvs-api"
 import type { TotvsMovimento } from "@/lib/totvs-api"
 import type { NotaFiscal, OrdemCompra } from "@/lib/types"
@@ -48,7 +46,6 @@ interface ValidationScreenProps {
 }
 
 export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenProps) {
-  const { config } = useConfig()
   const [oc, setOC] = useState<OrdemCompra | null>(null)
   const [movimentoTotvs, setMovimentoTotvs] = useState<TotvsMovimento | null>(null)
   const [movimentoTotvsErro, setMovimentoTotvsErro] = useState<string | null>(null)
@@ -65,26 +62,26 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
     branchId?: number
     movementTypeCode?: string
   } | null>(null)
-  // itemQuantities: quantidade que será recebida agora para cada item da OC (chave = ocItem.id)
   const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({})
-  const [avaliacaoQualidade, setAvaliacaoQualidade] = useState<string>(nfe.avaliacao?.qualidade ?? "")
+  const [avaliacaoQualidade, setAvaliacaoQualidade]       = useState<string>(nfe.avaliacao?.qualidade    ?? "")
   const [avaliacaoPontualidade, setAvaliacaoPontualidade] = useState<string>(nfe.avaliacao?.pontualidade ?? "")
-  const [avaliacaoMASSO, setAvaliacaoMASSO] = useState<string>(nfe.avaliacao?.masso ?? "")
+  const [avaliacaoMASSO, setAvaliacaoMASSO]               = useState<string>(nfe.avaliacao?.masso        ?? "")
 
   const isReadOnly = nfe.status === "processada"
 
-  useEffect(() => {
-    loadOC()
-  }, [nfe])
+  useEffect(() => { loadOC() }, [nfe])
 
   const loadOC = async () => {
     setIsLoading(true)
     try {
-      const data = await fetchOCByNFe(nfe.ordemCompraId || "", config, true)
+      const data = await fetchOCFromTotvs(
+        nfe.codColigada || "",
+        nfe.codFilial   || "",
+        nfe.numeromov   || nfe.ordemCompraId || ""
+      )
       setOC(data)
 
       if (data) {
-        // Inicializa com o restante de cada item (total - já recebido)
         const initial: Record<string, number> = {}
         for (const item of data.itens) {
           const restante = Math.max(0, item.quantidadeEsperada - (item.quantidadeRecebida ?? 0))
@@ -92,15 +89,13 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         }
         setItemQuantities(initial)
 
-        // Busca o movimento no TOTVS via API route (server-side, evita encoding do | pelo browser)
         if (data.codColigada && data.id) {
           const internalId = `${data.codColigada}|${data.id}`
           try {
-            const res = await fetch(`/api/totvs/movimento?internalId=${encodeURIComponent(internalId)}`)
+            const res  = await fetch(`/api/totvs/movimento?internalId=${encodeURIComponent(internalId)}`)
             const json = await res.json()
             if (!res.ok) {
-              const mensagem = json?.message || json?.detailedMessage || "Erro ao buscar movimentação no TOTVS."
-              setMovimentoTotvsErro(mensagem.trim())
+              setMovimentoTotvsErro((json?.message || json?.detailedMessage || "Erro ao buscar movimentação no TOTVS.").trim())
             } else {
               setMovimentoTotvs(json as TotvsMovimento)
               setMovimentoTotvsErro(null)
@@ -111,16 +106,15 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
           }
         }
       }
-    } catch (error) {
-      console.error("Erro ao carregar OC:", error)
+    } catch (err) {
+      console.error("Erro ao carregar OC:", err)
     } finally {
       setIsLoading(false)
     }
   }
 
   const updateItemQty = (itemId: string, value: number, max: number) => {
-    const clamped = Math.min(Math.max(0, value), max)
-    setItemQuantities((prev) => ({ ...prev, [itemId]: clamped }))
+    setItemQuantities((prev) => ({ ...prev, [itemId]: Math.min(Math.max(0, value), max) }))
   }
 
   const handleAccept = async () => {
@@ -128,86 +122,51 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
     setIsSubmitting(true)
 
     try {
-      // Envia o movimento de entrada no TOTVS via API route (server-side)
-      let totvsInternalId: string | undefined
-      let totvsData: { companyId?: number; movementId?: number; branchId?: number; movementTypeCode?: string } = {}
-      if (movimentoTotvs) {
-        const payload = construirPayloadEntrada(
-          movimentoTotvs,
-          itemQuantities,
-          { qualidade: avaliacaoQualidade, pontualidade: avaliacaoPontualidade, masso: avaliacaoMASSO }
-        )
-        const res = await fetch("/api/totvs/movimento", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        })
-        if (!res.ok) {
-          const json = await res.json()
-          const mensagem = json?.message || json?.detailedMessage || "Erro ao registrar movimento no TOTVS."
-          throw new Error(mensagem)
-        }
-        const totvsJson = await res.json()
-        totvsInternalId = totvsJson?.internalId ?? totvsJson?.InternalId
-        Object.assign(totvsData, {
-          companyId: totvsJson?.companyId ?? totvsJson?.CompanyId,
-          movementId: totvsJson?.movementId ?? totvsJson?.MovementId,
-          branchId: totvsJson?.branchId ?? totvsJson?.BranchId,
-          movementTypeCode: totvsJson?.movementTypeCode ?? totvsJson?.MovementTypeCode,
-        })
+      if (!movimentoTotvs) throw new Error("Movimentação TOTVS não carregada.")
+
+      const payload = construirPayloadEntrada(
+        movimentoTotvs,
+        itemQuantities,
+        { qualidade: avaliacaoQualidade, pontualidade: avaliacaoPontualidade, masso: avaliacaoMASSO },
+        nfe.numero,
+        nfe.chaveAcesso
+      )
+
+      const res = await fetch("/api/totvs/movimento", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) {
+        const json = await res.json()
+        throw new Error(json?.message || json?.detailedMessage || "Erro ao registrar movimento no TOTVS.")
       }
 
-      const response = await registrarEntradaNFe(nfe.id, config, true)
+      const totvsJson = await res.json()
+      const totvsInternalId = totvsJson?.internalId ?? totvsJson?.InternalId
 
-      if (response.success) {
-        await updateNFeStatus(nfe.id, {
-          avaliacao: {
-            qualidade: avaliacaoQualidade,
-            pontualidade: avaliacaoPontualidade,
-            masso: avaliacaoMASSO,
-          },
-        })
-
-        if (oc) {
-          const updatedItems = oc.itens.map((ocItem) => {
-            const qty = itemQuantities[ocItem.id] ?? 0
-            const newReceived = Math.min(
-              (ocItem.quantidadeRecebida ?? 0) + qty,
-              ocItem.quantidadeEsperada
-            )
-            return { ...ocItem, quantidadeRecebida: newReceived }
-          })
-          const allReceived = updatedItems.every(
-            (i) => (i.quantidadeRecebida ?? 0) >= i.quantidadeEsperada
-          )
-          await updateOCItems(oc.id, {
-            itens: updatedItems,
-            status: allReceived ? "fechada" : "parcial",
-          })
-        }
-      }
-
-      setResult({ ...response, internalId: totvsInternalId, ...totvsData })
+      setResult({
+        success: true,
+        message: "Entrada registrada com sucesso",
+        internalId: totvsInternalId,
+        companyId:        totvsJson?.companyId        ?? totvsJson?.CompanyId,
+        movementId:       totvsJson?.movementId       ?? totvsJson?.MovementId,
+        branchId:         totvsJson?.branchId         ?? totvsJson?.BranchId,
+        movementTypeCode: totvsJson?.movementTypeCode ?? totvsJson?.MovementTypeCode,
+      })
 
       await addToHistorico({
-        tipo: response.success ? "entrada" : "erro",
+        tipo: "entrada",
         notaFiscalId: nfe.id,
         notaFiscalNumero: nfe.numero,
         fornecedor: nfe.fornecedor.razaoSocial,
         dataHora: new Date().toISOString(),
-        status: response.success ? "sucesso" : "erro",
-        mensagem: response.message,
+        status: "sucesso",
+        mensagem: "Entrada registrada com sucesso",
       })
-
-      if (response.success) {
-        // usuário fecha manualmente
-      }
     } catch (err) {
-      let mensagem = "Erro inesperado ao processar entrada"
-      if (axios.isAxiosError(err)) {
-        const data = err.response?.data
-        mensagem = data?.message || data?.detailedMessage || err.message
-      }
+      const mensagem = err instanceof Error ? err.message : "Erro inesperado ao processar entrada"
       setResult({ success: false, message: mensagem })
     } finally {
       setIsSubmitting(false)
@@ -253,11 +212,9 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         <div className={`flex h-20 w-20 items-center justify-center rounded-full mb-6 ${
           result.success ? "bg-success/10" : "bg-destructive/10"
         }`}>
-          {result.success ? (
-            <CheckCircle2 className="h-10 w-10 text-success" />
-          ) : (
-            <XCircle className="h-10 w-10 text-destructive" />
-          )}
+          {result.success
+            ? <CheckCircle2 className="h-10 w-10 text-success" />
+            : <XCircle     className="h-10 w-10 text-destructive" />}
         </div>
         <h2 className={`text-2xl font-bold text-center mb-2 ${
           result.success ? "text-success" : "text-destructive"
@@ -265,15 +222,18 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
           {result.success ? "Entrada Registrada!" : "Falha no Registro"}
         </h2>
         <p className="text-center text-muted-foreground mb-4">{result.message}</p>
+
         {result.success && result.movementId && (
           <div className="w-full rounded-xl border bg-muted/50 p-4 mb-6 space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">Movimento gerado no TOTVS</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">
+              Movimento gerado no TOTVS
+            </p>
             {[
-              { label: "Coligada", value: result.companyId },
-              { label: "Movimento", value: result.movementId },
-              { label: "Filial", value: result.branchId },
+              { label: "Coligada",       value: result.companyId },
+              { label: "Movimento",      value: result.movementId },
+              { label: "Filial",         value: result.branchId },
               { label: "Tipo Movimento", value: result.movementTypeCode },
-              { label: "Status", value: "Pendente" },
+              { label: "Status",         value: "Pendente" },
             ].map(({ label, value }) => (
               <div key={label} className="flex justify-between text-sm">
                 <span className="text-muted-foreground">{label}</span>
@@ -282,15 +242,10 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
             ))}
           </div>
         )}
-        {result.success ? (
-          <Button onClick={onComplete} className="h-12 px-8">
-            Concluir
-          </Button>
-        ) : (
-          <Button onClick={() => setResult(null)} className="h-12 px-8">
-            Tentar Novamente
-          </Button>
-        )}
+
+        {result.success
+          ? <Button onClick={onComplete} className="h-12 px-8">Concluir</Button>
+          : <Button onClick={() => setResult(null)} className="h-12 px-8">Tentar Novamente</Button>}
       </div>
     )
   }
@@ -308,7 +263,7 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         </div>
       </div>
 
-      {/* Banner de já conciliada */}
+      {/* Banner já conciliada */}
       {isReadOnly && (
         <div className="flex items-center gap-3 rounded-xl bg-green-500/10 p-4 text-green-600 border border-green-500/20">
           <CheckCircle2 className="h-6 w-6 flex-shrink-0" />
@@ -321,7 +276,7 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         </div>
       )}
 
-      {/* Resumo da NF-e */}
+      {/* Resumo NF-e */}
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
@@ -380,6 +335,18 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
               <span className="text-muted-foreground">Status</span>
               <span className="font-medium capitalize">{oc.status}</span>
             </div>
+            {oc.filial?.nome && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Filial</span>
+                <span className="font-medium text-right max-w-[60%]">{oc.filial.nome}</span>
+              </div>
+            )}
+            {oc.filial?.cnpj && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">CNPJ Filial</span>
+                <span className="font-mono text-sm">{oc.filial.cnpj}</span>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -397,19 +364,15 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
             {oc.itens.map((ocItem) => {
               const recebido = ocItem.quantidadeRecebida ?? 0
               const restante = Math.max(0, ocItem.quantidadeEsperada - recebido)
-              const qty = itemQuantities[ocItem.id] ?? restante
-              const totalRecebidoComEsta = recebido + qty
-              const completo = totalRecebidoComEsta >= ocItem.quantidadeEsperada
+              const qty      = itemQuantities[ocItem.id] ?? restante
+              const completo = (recebido + qty) >= ocItem.quantidadeEsperada
 
               return (
                 <div key={ocItem.id} className="p-3 rounded-lg border bg-muted/20 space-y-3">
-                  {/* Descrição e código */}
                   <div>
                     <p className="font-medium text-sm">{ocItem.descricao}</p>
                     <p className="text-xs text-muted-foreground">{ocItem.codigo} · {ocItem.unidade}</p>
                   </div>
-
-                  {/* Progresso */}
                   <div className="grid grid-cols-3 gap-2 text-center text-xs">
                     <div className="rounded bg-background p-2">
                       <p className="text-muted-foreground">Total OC</p>
@@ -426,8 +389,6 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
                       </p>
                     </div>
                   </div>
-
-                  {/* Campo de quantidade a receber agora */}
                   {!isReadOnly && restante > 0 && (
                     <div className="space-y-1">
                       <label className="text-xs text-muted-foreground font-medium">
@@ -439,9 +400,7 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
                           min={0}
                           max={restante}
                           value={qty}
-                          onChange={(e) =>
-                            updateItemQty(ocItem.id, Number(e.target.value), restante)
-                          }
+                          onChange={(e) => updateItemQty(ocItem.id, Number(e.target.value), restante)}
                           className="h-10 text-center text-base font-semibold"
                         />
                         {completo && (
@@ -453,8 +412,6 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
                       </div>
                     </div>
                   )}
-
-                  {/* Leitura (já recebido completamente ou modo read-only) */}
                   {(isReadOnly || restante === 0) && (
                     <Badge className="bg-success/10 text-success border-success/30">
                       <Check className="h-3 w-3 mr-1" />
@@ -468,7 +425,7 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         </Card>
       )}
 
-      {/* Sem OC vinculada */}
+      {/* Sem OC */}
       {!oc && (
         <div className="flex items-center gap-3 rounded-xl bg-destructive/10 p-4 text-destructive border border-destructive/20">
           <AlertTriangle className="h-6 w-6 flex-shrink-0" />
@@ -486,21 +443,9 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         </CardHeader>
         <CardContent className="space-y-4">
           {[
-            {
-              label: "Qualidade de serviços prestados:",
-              value: avaliacaoQualidade,
-              onChange: setAvaliacaoQualidade,
-            },
-            {
-              label: "Pontualidade na entrega do produto ou serviço:",
-              value: avaliacaoPontualidade,
-              onChange: setAvaliacaoPontualidade,
-            },
-            {
-              label: "Atendimento aos requisitos de Meio Ambiente (MA) e Segurança e Saúde Ocupacional (SSO):",
-              value: avaliacaoMASSO,
-              onChange: setAvaliacaoMASSO,
-            },
+            { label: "Qualidade de serviços prestados:", value: avaliacaoQualidade, onChange: setAvaliacaoQualidade },
+            { label: "Pontualidade na entrega do produto ou serviço:", value: avaliacaoPontualidade, onChange: setAvaliacaoPontualidade },
+            { label: "Atendimento aos requisitos de Meio Ambiente (MA) e Segurança e Saúde Ocupacional (SSO):", value: avaliacaoMASSO, onChange: setAvaliacaoMASSO },
           ].map(({ label, value, onChange }) => (
             <div key={label} className="space-y-2">
               <label className="text-sm font-medium leading-snug block">{label}</label>
@@ -519,15 +464,11 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
         </CardContent>
       </Card>
 
-      {/* Botões de ação fixos */}
+      {/* Botões fixos */}
       <div className="fixed bottom-16 left-0 right-0 p-4 bg-gradient-to-t from-background via-background to-transparent safe-area-pb">
         <div className="mx-auto max-w-lg flex gap-3">
           {isReadOnly ? (
-            <Button
-              variant="outline"
-              className="flex-1 h-14 text-lg font-semibold"
-              onClick={onBack}
-            >
+            <Button variant="outline" className="flex-1 h-14 text-lg font-semibold" onClick={onBack}>
               <ArrowLeft className="mr-2 h-5 w-5" />
               Voltar
             </Button>
@@ -547,70 +488,50 @@ export function ValidationScreen({ nfe, onBack, onComplete }: ValidationScreenPr
                 onClick={() => setShowConfirmDialog(true)}
                 disabled={isSubmitting || !avaliacaoPreenchida || !oc || !movimentoTotvs}
               >
-                {isSubmitting ? (
-                  <>
-                    <Spinner className="mr-2" />
-                    Processando...
-                  </>
-                ) : (
-                  <>
-                    <Check className="mr-2 h-5 w-5" />
-                    Aceitar
-                  </>
-                )}
+                {isSubmitting
+                  ? <><Spinner className="mr-2" />Processando...</>
+                  : <><Check className="mr-2 h-5 w-5" />Aceitar</>}
               </Button>
             </>
           )}
         </div>
         {!isReadOnly && !oc && (
-          <p className="text-center text-xs text-destructive mt-2">
-            Vincule uma OC para habilitar as ações
-          </p>
+          <p className="text-center text-xs text-destructive mt-2">Vincule uma OC para habilitar as ações</p>
         )}
         {!isReadOnly && oc && !movimentoTotvs && movimentoTotvsErro && (
-          <p className="text-center text-xs text-destructive mt-2">
-            TOTVS: {movimentoTotvsErro}
-          </p>
+          <p className="text-center text-xs text-destructive mt-2">TOTVS: {movimentoTotvsErro}</p>
         )}
         {!isReadOnly && oc && !movimentoTotvs && !movimentoTotvsErro && (
-          <p className="text-center text-xs text-destructive mt-2">
-            Aguardando movimentação do TOTVS...
-          </p>
+          <p className="text-center text-xs text-destructive mt-2">Aguardando movimentação do TOTVS...</p>
         )}
         {!isReadOnly && oc && movimentoTotvs && !avaliacaoPreenchida && (
-          <p className="text-center text-xs text-muted-foreground mt-2">
-            Preencha todas as avaliações para confirmar a entrada
-          </p>
+          <p className="text-center text-xs text-muted-foreground mt-2">Preencha todas as avaliações para confirmar a entrada</p>
         )}
       </div>
 
-      {/* Dialog de confirmação */}
+      {/* Dialog confirmação */}
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Entrada</AlertDialogTitle>
             <AlertDialogDescription>
-              Você está prestes a registrar a entrada da NF-e {nfe.numero} no sistema.
-              Esta ação não pode ser desfeita.
+              Você está prestes a registrar a entrada da NF-e {nfe.numero} no sistema. Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleAccept}>
-              Confirmar Entrada
-            </AlertDialogAction>
+            <AlertDialogAction onClick={handleAccept}>Confirmar Entrada</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Dialog de recusa */}
+      {/* Dialog recusa */}
       <AlertDialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Recusar NF-e</AlertDialogTitle>
             <AlertDialogDescription>
               Você tem certeza que deseja recusar esta NF-e?
-              O fornecedor será notificado sobre a recusa.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

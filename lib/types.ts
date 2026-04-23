@@ -38,6 +38,9 @@ export interface NotaFiscal {
   itens: NFItem[]
   status: "pendente" | "processada" | "erro" | "recusada"
   ordemCompraId?: string
+  codColigada?: string
+  codFilial?: string
+  numeromov?: string
   avaliacao?: {
     qualidade: string
     pontualidade: string
@@ -60,9 +63,9 @@ export interface OrdemCompra {
   id: string
   codColigada?: string
   numero: string
-  fornecedor: {
+  filial?: {
     cnpj: string
-    razaoSocial: string
+    nome: string
   }
   dataEmissao: string
   dataPrevisao: string
